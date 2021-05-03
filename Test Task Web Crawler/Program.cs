@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace Test_Task_Web_Crawler
 {
@@ -12,19 +13,25 @@ namespace Test_Task_Web_Crawler
             Console.Write(@" Enter the website url (e.g. https://www.example.com/): ");
             string websiteLink=Console.ReadLine();
 
-            websiteLink = websiteLink.Replace("http", "https");
-
             Uri websiteUri = null;
 
             bool result = Uri.TryCreate(websiteLink, UriKind.Absolute, out websiteUri)
-            && (websiteUri.Scheme == Uri.UriSchemeHttps);
+            && (websiteUri.Scheme == Uri.UriSchemeHttps || websiteUri.Scheme == Uri.UriSchemeHttp);
 
-            if (result == false)
+            if (result == false )
             {
-                Console.WriteLine(" Invalid URL");
+                Console.WriteLine(" Invalid URL.");
                 Console.Read();
                 return;
             }
+
+            if(CheckRedirection(websiteUri)==false)
+            {
+                Console.WriteLine(" Error. The server is redirecting the request for this url.");
+                Console.Read();
+                return;
+            }
+            
 
             try 
             {
@@ -93,6 +100,25 @@ namespace Test_Task_Web_Crawler
 
             Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             table.Write();
+        }
+
+        private static bool CheckRedirection(Uri uri)
+        {
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Method = "HEAD";
+            request.AllowAutoRedirect = false;
+            bool result=true;
+            try
+            {
+                using (var response = request.GetResponse() as HttpWebResponse)
+                {
+                }
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;            
         }
     }
 }

@@ -18,8 +18,11 @@ namespace Test_Task_Web_Crawler
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(link);
                     Stopwatch timer = new Stopwatch();
                     timer.Start();
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                    timer.Stop();
+                    using (var response = request.GetResponse() as HttpWebResponse)
+                    {
+                        timer.Stop();
+                    }
+
                     TimeSpan timeTaken = timer.Elapsed;
                     result.Add(new PerformanceResult { Link=link, ResponseTime=timeTaken });
                 }
