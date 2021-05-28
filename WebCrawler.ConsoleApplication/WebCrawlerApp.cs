@@ -10,6 +10,13 @@ namespace WebCrawler.ConsoleApplication
 {
     public class WebCrawlerApp
     {
+        private readonly DbWorker _dbWorker;
+
+        public WebCrawlerApp(DbWorker dbWorker)
+        {
+            _dbWorker = dbWorker;
+        }
+
         public void Start()
         {
             var validator = new InputValidator();
@@ -52,10 +59,15 @@ namespace WebCrawler.ConsoleApplication
 
             Console.WriteLine("Response time processing. It will take some time...");
             var combinedLinks = sitemapLinks.Union(websiteLinks).ToList();
-            responcePrinter.PrintTable(performanceEvaluationGetter.PrepareLinks(combinedLinks, new PerformanceEvaluator()));
+            var performanceEvaluationResult = performanceEvaluationGetter.PrepareLinks(combinedLinks, new PerformanceEvaluator());
+            responcePrinter.PrintTable(performanceEvaluationResult);
+
+            Console.WriteLine("Saving result...");
+            _dbWorker.SaveResult(WebsiteUrl, performanceEvaluationResult);
 
             Console.WriteLine("Enter to exit.");
             Console.ReadLine();
+            Environment.Exit(0);
         }
        
     }
