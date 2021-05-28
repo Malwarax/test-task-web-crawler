@@ -12,7 +12,7 @@ namespace WebCrawler.ConsoleApplication
     {
         public void Start()
         {
-            var inputReceiver = new UserInputReceiver(new ConsoleWrapper(), new InputValidator());
+            var validator = new InputValidator();
             var websiteCrawler = new WebsiteCrawler();
             var sitemapCrawler = new SitemapCrawler();
 
@@ -22,15 +22,31 @@ namespace WebCrawler.ConsoleApplication
             var performanceEvaluationGetter = new PerformanceEvaluationGetter();
 
             bool inputResult = false;
-            
-            while(inputResult==false)
-                inputResult=inputReceiver.GetUserInput();
+            Uri WebsiteUrl = null; ;
+
+            while (inputResult == false)
+            {
+                Console.WriteLine(@"Enter the website url (e.g. https://www.example.com/):");
+                string websiteLink = Console.ReadLine();
+                var validationResult = validator.Validate(websiteLink, new UrlValidator(), new RedirectionValidator());
+
+                if (!validationResult)
+                {
+                    inputResult = false;
+                }
+                else
+                {
+                    WebsiteUrl = new Uri(websiteLink);
+                    inputResult = true;
+                }
+
+            }
 
             Console.WriteLine("Crawling website. It will take some time...");
-            var websiteLinks = websiteCrawler.Crawl(inputReceiver.WebsiteUrl, new PageDownloader(), new PageParser());
+            var websiteLinks = websiteCrawler.Crawl(WebsiteUrl, new PageDownloader(), new PageParser());
 
             Console.WriteLine("Crawling sitemap. It will take some time...");
-            var sitemapLinks = sitemapCrawler.Crawl(inputReceiver.WebsiteUrl, new SitemapLinkReceiver(), new PageDownloader(), new SitemapParser());
+            var sitemapLinks = sitemapCrawler.Crawl(WebsiteUrl, new SitemapLinkReceiver(), new PageDownloader(), new SitemapParser());
 
             differencePrinter.PrintDifference(sitemapLinks, websiteLinks);
 
