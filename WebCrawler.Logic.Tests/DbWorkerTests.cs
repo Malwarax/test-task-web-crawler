@@ -7,6 +7,7 @@ using System.Data;
 using WebCrawler.Data;
 using System.Threading;
 using WebCrawler.EntityFramework;
+using System.Linq;
 
 namespace WebCrawler.Logic.Tests
 {
@@ -15,61 +16,72 @@ namespace WebCrawler.Logic.Tests
         private DbWorker dbWorker;
         private Mock<IRepository<Website>> websiteRepositoryMock;
         private Mock<IRepository<PerformanceResult>> performanceResultRepositoryMock;
+        private Uri url;
 
         public DbWorkerTests()
         {
             websiteRepositoryMock = new Mock<IRepository<Website>>();
             performanceResultRepositoryMock = new Mock<IRepository<PerformanceResult>>();
             dbWorker = new DbWorker(performanceResultRepositoryMock.Object, websiteRepositoryMock.Object);
+            url = new Uri("https://www.example.com");
         }
 
         [Fact]
-        public void SaveResult_WithNewWebsite_ShouldSaveWebsite()
+        public void SaveResult_WithNewWebsite_ShouldAddWebsite()
         {
             //Arrange
-            var ulr = new Uri("https://www.example.com");
-            var performanceResult = new List<PerformanceResultModel>() { new PerformanceResultModel() };
+            var performanceResultModel = new List<PerformanceResultDTO>() { new PerformanceResultDTO() };
 
             //Act
-            dbWorker.SaveResult(ulr, performanceResult);
+            dbWorker.SaveResult(url, performanceResultModel);
 
             //Assert
             websiteRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Website>(),It.IsAny<CancellationToken>()),Times.Once);
         }
         
         [Fact]
-        public void SaveResult_WithNewWebsite_ShouldAddNewResults()
+        public void SaveResult_WithNewWebsite_ShouldAddResults()
         {
             //Arrange
-            var ulr = new Uri("https://www.example.com");
-            var performanceResult = new List<PerformanceResultModel>() { new PerformanceResultModel(),new PerformanceResultModel(), new PerformanceResultModel() };
+            var performanceResultModel = new List<PerformanceResultDTO>() { new PerformanceResultDTO(),new PerformanceResultDTO(), new PerformanceResultDTO() };
 
             //Act
-            dbWorker.SaveResult(ulr, performanceResult);
+            dbWorker.SaveResult(url, performanceResultModel);
 
             //Assert
             performanceResultRepositoryMock.Verify(r => r.AddAsync(It.IsAny<PerformanceResult>(), It.IsAny<CancellationToken>()),Times.Exactly(3));
         }
 
-        //[Fact]
-        //public void SaveResult_WithExistingWebsite_ShouldUpdateResults()
-        //{
-        //    //Arrange
-        //    var ulr = new Uri("https://www.example.com");
-        //
-        //    var performanceResult = new List<PerformanceResultModel>() { new PerformanceResultModel(), new PerformanceResultModel(), new PerformanceResultModel() };
-        //
-        //    //Act
-        //    dbWorker.SaveResult(ulr, performanceResult);
-        //
-        //    //Assert
-        //    performanceResultRepositoryMock.Verify(r => r.Update(It.IsAny<PerformanceResult>()), Times.Exactly(3));
-        //}
+        [Fact]
+        public void SaveResult_WithExistingWebsite_ShouldUpdateResults()
+        {
+            //Arrange
+            var performanceResultModel = new List<PerformanceResultDTO>() { new PerformanceResultDTO() { Link = "https://www.example.com/example/" } };
+            var performanceResult = new PerformanceResult { Link = "https://www.example.com/example/"  };
+            var website = new Website { WebsiteLink = url.AbsoluteUri, PerformanceResults = new List<PerformanceResult>() { performanceResult } };
+            websiteRepositoryMock.Setup(w => w.GetAll()).Returns(new List<Website>() { website }.AsQueryable());
 
-        //[Fact]
-        //public void SaveResult_WithExistingWebsite_ShouldAddNewResults()
-        //{
+            //Act
+            dbWorker.SaveResult(url, performanceResultModel);
+        
+            //Assert
+            performanceResultRepositoryMock.Verify(r => r.Update(It.IsAny<PerformanceResult>()), Times.Once);
+        }
 
-        //}
+        [Fact]
+        public void SaveResult_WithExistingWebsite_ShouldAddResults()
+        {
+            //Arrange
+            var performanceResultModel = new List<PerformanceResultDTO>() { new PerformanceResultDTO() { Link = "https://www.example.com/example/" } };
+            var performanceResult = new PerformanceResult { Link = "https://www.example.com/example2/" };
+            var website = new Website { WebsiteLink = url.AbsoluteUri, PerformanceResults = new List<PerformanceResult>() { performanceResult } };
+            websiteRepositoryMock.Setup(w => w.GetAll()).Returns(new List<Website>() { website }.AsQueryable());
+
+            //Act
+            dbWorker.SaveResult(url, performanceResultModel);
+
+            //Assert
+            performanceResultRepositoryMock.Verify(r => r.AddAsync(It.IsAny<PerformanceResult>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
     }
 }

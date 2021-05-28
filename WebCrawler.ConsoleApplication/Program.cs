@@ -12,13 +12,6 @@ namespace WebCrawler.ConsoleApplication
 {
     class Program
     {
-
-
-
-        //static void Main(string[] args)
-        //{
-        //    CreateHostBuilder(args).Build().Run();
-        //}
         static async Task Main(string[] args)
         {
             using IHost host = CreateHostBuilder(args).Build();
@@ -35,7 +28,5 @@ namespace WebCrawler.ConsoleApplication
                         services.AddScoped<DbWorker>();
                         services.AddScoped<WebCrawlerApp>();
                     }).ConfigureLogging(options => options.SetMinimumLevel(LogLevel.Error));
-
     }
 }
-//.AddDbContext<WebCrawlerDbContext>()

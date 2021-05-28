@@ -20,39 +20,55 @@ namespace WebCrawler.Logic
             _websiteRepository = websiteRepository;
         }
 
-        public async void SaveResult(Uri WebsiteUrl, List<PerformanceResultModel> performanceResultModels)
+        public void SaveResult(Uri WebsiteUrl, List<PerformanceResultDTO> performanceResultModels)
         {
             var website = _websiteRepository.GetByUrl(WebsiteUrl.AbsoluteUri);
             if (website==null)
             {
-                var newWebsite = new Website { WebsiteLink = WebsiteUrl.AbsoluteUri };
-                await _websiteRepository.AddAsync(newWebsite);
-                await _websiteRepository.SaveChangesAsync();
-
-                foreach (var result in performanceResultModels)
-                {
-                    await _performanceResultRepository.AddAsync(new PerformanceResult { Link = result.Link, ResponseTime = result.ResponseTime, WebsiteId = newWebsite.Id });
-                }
-
-                await _performanceResultRepository.SaveChangesAsync();
+                AddNewWebsite(WebsiteUrl.AbsoluteUri, performanceResultModels);
             }
             else
             {
-                foreach(var result in performanceResultModels)
-                {
-                    var performanceResult=website.PerformanceResults.Where(r => r.Link == result.Link).FirstOrDefault();
-                    if (performanceResult==null)
-                    {
-                        await _performanceResultRepository.AddAsync(new PerformanceResult { Link = result.Link, ResponseTime = result.ResponseTime, WebsiteId = website.Id });
-                    }
-                    else
-                    {
-                        performanceResult.ResponseTime = result.ResponseTime;
-                        _performanceResultRepository.Update(performanceResult);
-                    }
-                }
-                await _performanceResultRepository.SaveChangesAsync();
+                AddOrUpdateResults(website, performanceResultModels);
             }
+        }
+
+        private PerformanceResult GetPerformanceResult(string link, TimeSpan responseTime, int websiteId)
+        {
+            return new PerformanceResult { Link = link, ResponseTime = responseTime, WebsiteId = websiteId };
+        }
+
+        private async void AddNewWebsite(string url, List<PerformanceResultDTO> results)
+        {
+            var newWebsite = new Website { WebsiteLink = url };
+            await _websiteRepository.AddAsync(newWebsite);
+            await _websiteRepository.SaveChangesAsync();
+
+            foreach (var result in results)
+            {
+                await _performanceResultRepository.AddAsync(GetPerformanceResult(result.Link, result.ResponseTime, newWebsite.Id));
+            }
+
+            await _performanceResultRepository.SaveChangesAsync();
+        }
+
+        private async void AddOrUpdateResults(Website website, List<PerformanceResultDTO> results)
+        {
+            foreach(var result in results)
+            {
+                var performanceResult = website.PerformanceResults.FirstOrDefault(r => r.Link == result.Link);//.Where(r => r.Link == result.Link).FirstOrDefault();
+                if (performanceResult==null)
+                {
+                    await _performanceResultRepository.AddAsync(GetPerformanceResult(result.Link, result.ResponseTime, website.Id));
+                }
+                else
+                {
+                    performanceResult.ResponseTime = result.ResponseTime;
+                    _performanceResultRepository.Update(performanceResult);
+                }
+            }
+
+            await _performanceResultRepository.SaveChangesAsync();
         }
     }
 }

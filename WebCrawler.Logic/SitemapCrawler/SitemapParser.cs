@@ -31,12 +31,15 @@ namespace WebCrawler.Logic
                             uriList.Add(new Uri(url["loc"].InnerText));
                         }
                     }
-
+                }
+                else
+                {
+                    Console.WriteLine("The website contains empty sitemap.xml");
                 }
             }
             catch
             {
-                Console.WriteLine("Something went wrong with sitemap.xml");
+                Console.WriteLine("Error. The website does not contain sitemap.xml");
             }
 
             return uriList

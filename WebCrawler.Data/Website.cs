@@ -8,6 +8,7 @@ namespace WebCrawler.Data
     {
         public int Id { get; set; }
         public string WebsiteLink { get; set; }
+
         public List<PerformanceResult> PerformanceResults { get; set; }
     }
 }

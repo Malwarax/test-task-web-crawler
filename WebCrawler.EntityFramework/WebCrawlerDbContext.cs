@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.Data;
+using System.Reflection;
 using WebCrawler.Data;
+using WebCrawler.EntityFramework.EntityConfigurations;
 
 namespace WebCrawler.EntityFramework
 {
@@ -18,12 +20,14 @@ namespace WebCrawler.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //   optionsBuilder.UseSqlServer(@"Server=localhost\MSSQLSERVER01;Database=WebCrawlerDB;Trusted_Connection=True");
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(WebCrawlerDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.ApplyConfiguration(new WebsiteConfiguration());
         }
     }
 

@@ -48,9 +48,14 @@ namespace WebCrawler.Logic
 
                 foreach (var link in parsedLinks)
                 {
-                    if (!result.Contains(link) && !linksToParse.Contains(link))
+                    var isThisLinkNotBeenFoundYet = !result.Contains(link) && !linksToParse.Contains(link);
+
+                    if (isThisLinkNotBeenFoundYet)
+                    {
                         linksToParse.Add(link);
+                    }
                 }
+
                 linksToParse.RemoveAt(0);
             }
 

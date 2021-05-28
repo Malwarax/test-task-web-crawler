@@ -8,13 +8,13 @@ namespace WebCrawler.Logic
 {
     public class PerformanceEvaluationGetter
     {
-        public virtual List<PerformanceResultModel> PrepareLinks(List<Uri> links,PerformanceEvaluator performanceEvaluator)
+        public virtual List<PerformanceResultDTO> PrepareLinks(List<Uri> links,PerformanceEvaluator performanceEvaluator)
         {
-            List<PerformanceResultModel> result = new List<PerformanceResultModel>();
+            List<PerformanceResultDTO> result = new List<PerformanceResultDTO>();
 
             foreach (var link in links)
             {
-                result.Add(new PerformanceResultModel { Link = link.AbsoluteUri, ResponseTime = performanceEvaluator.GetResponceTime(link) });
+                result.Add(new PerformanceResultDTO { Link = link.AbsoluteUri, ResponseTime = performanceEvaluator.GetResponceTime(link) });
             }
 
             return result
