@@ -6,19 +6,28 @@ namespace WebCrawler.ConsoleApplication
 {
     public class UrlValidator
     {
-        public virtual bool CheckUrl(string url, ConsoleWrapper console)
+        private readonly ConsoleWrapper _console;
+
+        public UrlValidator(ConsoleWrapper console)
+        {
+            _console = console;
+        }
+
+        public virtual bool CheckUrl(string url)
         {
             Uri websiteUri = null;
             bool result = Uri.TryCreate(url, UriKind.Absolute, out websiteUri);
             
             if(result==false)
             {
-                console.WriteLine("Error. Invalid Url. The format of the Url could not be determined.");
+                _console.WriteLine("Error. Invalid Url. The format of the Url could not be determined.");
             }
 
-            if(result == true && websiteUri.Scheme != Uri.UriSchemeHttps && websiteUri.Scheme != Uri.UriSchemeHttp)
+            bool isThisUrlHasCorrectScheme = result == true && websiteUri.Scheme != Uri.UriSchemeHttps && websiteUri.Scheme != Uri.UriSchemeHttp;
+            
+            if (isThisUrlHasCorrectScheme)
             {
-                console.WriteLine("Error. Invalid Url. The Url does not contain Http or Https scheme.");
+                _console.WriteLine("Error. Invalid Url. The Url does not contain Http or Https scheme.");
                 result = false;
             }
 

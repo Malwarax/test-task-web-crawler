@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210531150150_temp.cs" />
+    <Compile Remove="Migrations\20210531150150_temp.Designer.cs" />
+    <Compile Remove="Migrations\20210531150827_deleteResponseTimeTimespan.cs" />
+    <Compile Remove="Migrations\20210531150827_deleteResponseTimeTimespan.Designer.cs" />
+    <Compile Remove="Migrations\20210531151126_IntResponseTime.cs" />
+    <Compile Remove="Migrations\20210531151126_IntResponseTime.Designer.cs" />
+    <Compile Remove="Migrations\20210531151716_IntResponseTime.cs" />
+    <Compile Remove="Migrations\20210531151716_IntResponseTime.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.15">
       <PrivateAssets>all</PrivateAssets>

@@ -7,21 +7,21 @@ namespace WebCrawler.Logic.Tests
 {
     public class PageParserTests
     {
-        private PageParser parser;
+        private readonly PageParser _parser;
 
         public PageParserTests()
         {
-            parser = new PageParser();
+            _parser = new PageParser();
         }
 
         [Fact]
         public void GetLinks_ShouldReturnsAllUrlsFromHtmlDocument()
         {
             //Arrange
-            string document = @"<body><a href=""https://www.example.com/example1/"">Link 1</a><a href=""https://www.example.com/example2/"">Link 2</a>";
+            string document = @"<body><a href=""https://www.example.com/example1/"">Url 1</a><a href=""https://www.example.com/example2/"">Url 2</a>";
 
             //Act
-            List<Uri> result = parser.GetLinks(document, new Uri("https://www.example.com/"));
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Equal(2, result.Count);
@@ -33,10 +33,10 @@ namespace WebCrawler.Logic.Tests
         public void GetLinks_ShouldSupportAbsoluteLinks()
         {
             //Arrange
-            string document = @"<body><a href=""https://www.example.com/example1/"">Link</a>";
+            string document = @"<body><a href=""https://www.example.com/example1/"">Url</a>";
 
             //Act
-            List<Uri> result = parser.GetLinks(document, new Uri("https://www.example.com/"));
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Contains(new Uri("https://www.example.com/example1/"), result);
@@ -46,10 +46,10 @@ namespace WebCrawler.Logic.Tests
         public void GetLinks_ShouldSupportRelativeLinks()
         {
             //Arrange
-            string document = @"<body><a href=""/example1/"">Link</a>";
+            string document = @"<body><a href=""/example1/"">Url</a>";
 
             //Act
-            List<Uri> result = parser.GetLinks(document, new Uri("https://www.example.com/"));
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Contains(new Uri("https://www.example.com/example1/"), result);
@@ -59,10 +59,10 @@ namespace WebCrawler.Logic.Tests
         public void GetLinks_ShouldSupportLinksWithoutScheme()
         {
             //Arrange
-            string document = @"<body><a href=""www.example.com/example1/"">Link</a>";
+            string document = @"<body><a href=""www.example.com/example1/"">Url</a>";
 
             //Act
-            List<Uri> result = parser.GetLinks(document, new Uri("https://www.example.com/"));
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Contains(new Uri("https://www.example.com/example1/"), result);
@@ -72,10 +72,10 @@ namespace WebCrawler.Logic.Tests
         public void GetLinks_ShouldIgnoreAnotherDomainLinks()
         {
             //Arrange
-            string document = @"<body><a href=""https://www.anotherexample.com/example1/"">Link</a>";
+            string document = @"<body><a href=""https://www.anotherexample.com/example1/"">Url</a>";
 
             //Act
-            List<Uri> result = parser.GetLinks(document, new Uri("https://www.example.com/"));
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Empty(result);

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace WebCrawler.Data
 {
-    public class Website
+    public class Test
     {
         public int Id { get; set; }
-        public string WebsiteLink { get; set; }
+        public string Url { get; set; }
 
         public List<PerformanceResult> PerformanceResults { get; set; }
     }

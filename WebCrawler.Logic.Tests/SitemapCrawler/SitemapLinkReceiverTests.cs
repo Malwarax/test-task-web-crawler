@@ -8,13 +8,11 @@ namespace WebCrawler.Logic.Tests
 {
     public class SitemapLinkReceiverTests
     {
-        private SitemapLinkReceiver receiver;
-        private Mock<PageDownloader> downloaderMock;
+        private readonly SitemapLinkReceiver _receiver;
 
         public SitemapLinkReceiverTests()
         {
-            receiver = new SitemapLinkReceiver();
-            downloaderMock = new Mock<PageDownloader>();
+            _receiver = new SitemapLinkReceiver();
         }
 
         [Fact]
@@ -23,10 +21,9 @@ namespace WebCrawler.Logic.Tests
             //Arrange
             var expected = new Uri("https://www.example.com/sitemap-index.xml");
             var robots = "line1\nline2\nSitemap: https://www.example.com/sitemap-index.xml";
-            downloaderMock.Setup(d => d.GetPage(It.IsAny<Uri>())).Returns(robots);
 
             //Act
-            var result = receiver.GetSitemapUri(new Uri("https://www.example.com/"),downloaderMock.Object);
+            var result = _receiver.GetSitemapUri(new Uri("https://www.example.com/"),robots);
 
             //Assert
             Assert.Equal(expected, result);
@@ -38,10 +35,9 @@ namespace WebCrawler.Logic.Tests
             //Arrange
             var expected = new Uri("https://www.example.com/sitemap.xml");
             var robots = "robots";
-            downloaderMock.Setup(d => d.GetPage(It.IsAny<Uri>())).Returns(robots);
 
             //Act
-            var result = receiver.GetSitemapUri(new Uri("https://www.example.com/"), downloaderMock.Object);
+            var result = _receiver.GetSitemapUri(new Uri("https://www.example.com/"), robots);
 
             //Assert
             Assert.Equal(expected, result);

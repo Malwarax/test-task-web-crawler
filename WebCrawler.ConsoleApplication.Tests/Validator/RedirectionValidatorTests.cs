@@ -6,20 +6,20 @@ namespace WebCrawler.ConsoleApplication.Tests
 {
     public class RedirectionValidatorTests
     {
-        private Mock<ConsoleWrapper> consoleMock;
-        private RedirectionValidator validator;
+        private readonly Mock<ConsoleWrapper> _consoleMock;
+        private readonly RedirectionValidator _validator;
 
         public RedirectionValidatorTests()
         {
-            consoleMock = new Mock<ConsoleWrapper>();
-            validator = new RedirectionValidator();
+            _consoleMock = new Mock<ConsoleWrapper>();
+            _validator = new RedirectionValidator(_consoleMock.Object);
         }
 
         [Fact]
         public void CheckRedirection_WithRedirection_ShouldReturnFalse()
         {
             //Act
-            var result = validator.CheckRedirection("http://google.com/", consoleMock.Object);
+            var result = _validator.CheckRedirection("http://google.com/");
 
             //Assert
             Assert.False(result);
@@ -29,17 +29,17 @@ namespace WebCrawler.ConsoleApplication.Tests
         public void CheckRedirection_WithRedirection_ShouldPrintMessage()
         {
             //Act
-            var result = validator.CheckRedirection("http://google.com/", consoleMock.Object);
+            var result = _validator.CheckRedirection("http://google.com/");
 
             //Assert
-            consoleMock.Verify(c => c.WriteLine("Error. The server is redirecting the request for this url."));
+            _consoleMock.Verify(c => c.WriteLine("Error. The server is redirecting the request for this url."));
         }
 
         [Fact]
         public void CheckRedirection_WithoutRedirection_ShouldReturnTrue()
         {
             //Act
-            var result = validator.CheckRedirection("https://www.google.com/", consoleMock.Object);
+            var result = _validator.CheckRedirection("https://www.google.com/");
 
             //Assert
             Assert.True(result);

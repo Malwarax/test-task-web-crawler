@@ -8,20 +8,20 @@ namespace WebCrawler.Logic.Tests
 {
     public class PerformanceEvaluationGetterTests
     {
-        private PerformanceEvaluationGetter getter;
-        private Mock<PerformanceEvaluator> performanceEvaluatorMock;
+        private readonly PerformanceEvaluationGetter _getter;
+        private readonly Mock<PerformanceEvaluator> _performanceEvaluatorMock;
 
         public PerformanceEvaluationGetterTests()
         {
-            getter = new PerformanceEvaluationGetter();
-            performanceEvaluatorMock = new Mock<PerformanceEvaluator>();
+            _performanceEvaluatorMock = new Mock<PerformanceEvaluator>();
+            _getter = new PerformanceEvaluationGetter(_performanceEvaluatorMock.Object);
         }
 
         [Fact]
         public void PrepareLinks_WithEmptyLinksList_ShouldReturnEmptyList()
         {
             //Act
-            var result = getter.PrepareLinks(new List<Uri>(), performanceEvaluatorMock.Object);
+            var result = _getter.PrepareLinks(new List<Uri>());
 
             //Assert
             Assert.Empty(result);
@@ -31,10 +31,10 @@ namespace WebCrawler.Logic.Tests
         public void PrepareLinks_WithOneLink_ShouldReturnResponceTimeResult()
         {
             //Arrange
-            performanceEvaluatorMock.Setup(p => p.GetResponceTime(It.IsAny<Uri>())).Returns(new TimeSpan(100));
+            _performanceEvaluatorMock.Setup(p => p.GetResponceTime(It.IsAny<Uri>())).Returns(new TimeSpan(100));
 
             //Act
-            var result = getter.PrepareLinks(new List<Uri>() {new Uri("https://www.example.com/") },performanceEvaluatorMock.Object);
+            var result = _getter.PrepareLinks(new List<Uri>() {new Uri("https://www.example.com/") });
 
             //Assert
             Assert.Equal("https://www.example.com/", result[0].Link);
@@ -46,13 +46,13 @@ namespace WebCrawler.Logic.Tests
         {
             //Arrange
             var link = new Uri("https://www.example.com/");
-            performanceEvaluatorMock.SetupSequence(p => p.GetResponceTime(It.IsAny<Uri>()))
+            _performanceEvaluatorMock.SetupSequence(p => p.GetResponceTime(It.IsAny<Uri>()))
                 .Returns(new TimeSpan(300))
                 .Returns(new TimeSpan(100))
                 .Returns(new TimeSpan(200));
 
             //Act
-            var result = getter.PrepareLinks(new List<Uri>() { link,link,link }, performanceEvaluatorMock.Object);
+            var result = _getter.PrepareLinks(new List<Uri>() { link,link,link });
 
             //Assert
             Assert.Equal(result.OrderBy(r => r.ResponseTime), result);

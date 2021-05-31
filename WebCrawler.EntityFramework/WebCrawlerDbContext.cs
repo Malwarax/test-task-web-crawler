@@ -1,11 +1,7 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-
-using System;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Reflection;
 using WebCrawler.Data;
-using WebCrawler.EntityFramework.EntityConfigurations;
 
 namespace WebCrawler.EntityFramework
 {
@@ -13,21 +9,17 @@ namespace WebCrawler.EntityFramework
     {
         public WebCrawlerDbContext(DbContextOptions<WebCrawlerDbContext> options) : base(options)
         {
-
+            Database.Migrate();
         }
+
         public DbSet<PerformanceResult> PerformanceResults { get; set; }
-        public DbSet<Website> Websites { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-        }
+        public DbSet<Test> Tests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(WebCrawlerDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            //modelBuilder.ApplyConfiguration(new WebsiteConfiguration());
         }
     }
 

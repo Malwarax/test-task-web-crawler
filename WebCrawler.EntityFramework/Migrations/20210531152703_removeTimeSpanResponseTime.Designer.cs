@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebCrawler.EntityFramework;
 
 namespace WebCrawler.EntityFramework.Migrations
 {
     [DbContext(typeof(WebCrawlerDbContext))]
-    partial class WebCrawlerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210531152703_removeTimeSpanResponseTime")]
+    partial class removeTimeSpanResponseTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +27,7 @@ namespace WebCrawler.EntityFramework.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ResponseTime")
+                    b.Property<int>("ResponseTimeInt")
                         .HasColumnType("int");
 
                     b.Property<int>("TestId")

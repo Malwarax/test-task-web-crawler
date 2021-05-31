@@ -19,51 +19,56 @@ namespace WebCrawler.ConsoleApplication
 
         public void Start()
         {
-            var validator = new InputValidator();
-            var websiteCrawler = new WebsiteCrawler();
-            var sitemapCrawler = new SitemapCrawler();
+            var consoleWrapper = new ConsoleWrapper();
+            var pageDownloader = new PageDownloader();
+
+            var urlValidator=new UrlValidator(consoleWrapper);
+            var redirectionValidator=new RedirectionValidator(consoleWrapper);
+
+            var pageParser = new PageParser();
+            var websiteCrawler = new WebsiteCrawler(pageDownloader, pageParser);
+
+            var sitemapLinkReceiver = new SitemapLinkReceiver();
+            var sitemapParser = new SitemapParser();
+            var sitemapCrawler = new SitemapCrawler(pageDownloader, sitemapLinkReceiver, sitemapParser);
 
             var differencePrinter = new LinksDifferencePrinter();
             var responcePrinter = new ResponsePrinter();
 
-            var performanceEvaluationGetter = new PerformanceEvaluationGetter();
+            var performanceEvaluationGetter = new PerformanceEvaluationGetter(new PerformanceEvaluator());
 
-            bool inputResult = false;
-            Uri WebsiteUrl = null; ;
+            bool isThisUrlHasValidationErrors;
+            Uri websiteUrl = null;
 
-            while (inputResult == false)
+            do
             {
                 Console.WriteLine(@"Enter the website url (e.g. https://www.example.com/):");
-                string websiteLink = Console.ReadLine();
-                var validationResult = validator.Validate(websiteLink, new UrlValidator(), new RedirectionValidator());
+                string url = Console.ReadLine();
+                isThisUrlHasValidationErrors = urlValidator.CheckUrl(url) == false || redirectionValidator.CheckRedirection(url) == false;
 
-                if (!validationResult)
-                {
-                    inputResult = false;
-                }
-                else
-                {
-                    WebsiteUrl = new Uri(websiteLink);
-                    inputResult = true;
+                if (!isThisUrlHasValidationErrors)
+                { 
+                    websiteUrl = new Uri(url);
                 }
 
-            }
+            } 
+            while (isThisUrlHasValidationErrors);
 
             Console.WriteLine("Crawling website. It will take some time...");
-            var websiteLinks = websiteCrawler.Crawl(WebsiteUrl, new PageDownloader(), new PageParser());
+            var websiteLinks = websiteCrawler.Crawl(websiteUrl);
 
             Console.WriteLine("Crawling sitemap. It will take some time...");
-            var sitemapLinks = sitemapCrawler.Crawl(WebsiteUrl, new SitemapLinkReceiver(), new PageDownloader(), new SitemapParser());
+            var sitemapLinks = sitemapCrawler.Crawl(websiteUrl);
 
             differencePrinter.PrintDifference(sitemapLinks, websiteLinks);
 
             Console.WriteLine("Response time processing. It will take some time...");
             var combinedLinks = sitemapLinks.Union(websiteLinks).ToList();
-            var performanceEvaluationResult = performanceEvaluationGetter.PrepareLinks(combinedLinks, new PerformanceEvaluator());
+            var performanceEvaluationResult = performanceEvaluationGetter.PrepareLinks(combinedLinks);
             responcePrinter.PrintTable(performanceEvaluationResult);
 
             Console.WriteLine("Saving result...");
-            _dbWorker.SaveResult(WebsiteUrl, performanceEvaluationResult);
+            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult);
 
             Console.WriteLine("Enter to exit.");
             Console.ReadLine();

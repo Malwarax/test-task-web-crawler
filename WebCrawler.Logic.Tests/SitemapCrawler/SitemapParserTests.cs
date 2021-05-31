@@ -8,10 +8,10 @@ namespace WebCrawler.Logic.Tests
 {
     public class SitemapParserTests
     {
-        private SitemapParser parser;
+        private readonly SitemapParser _parser;
         public SitemapParserTests()
         {
-            parser = new SitemapParser();
+            _parser = new SitemapParser();
         }
 
         [Fact]
@@ -21,7 +21,7 @@ namespace WebCrawler.Logic.Tests
             string document = System.IO.File.ReadAllText("Samples/xml1.txt");
 
             //Act
-            List<Uri> result = parser.GetLinks(document, new Uri("https://wwww.example.com/"));
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://wwww.example.com/"));
 
             //Assert
             Assert.Equal(2, result.Count);
@@ -36,7 +36,7 @@ namespace WebCrawler.Logic.Tests
             string document = System.IO.File.ReadAllText("Samples/xml2.txt");
 
             //Act
-            List<Uri> result = parser.GetLinks(document, new Uri("https://www.example.com/"));
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Equal(2, result.Count);

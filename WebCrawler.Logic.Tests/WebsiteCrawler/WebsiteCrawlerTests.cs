@@ -8,25 +8,25 @@ namespace WebCrawler.Logic.Tests
 {
     public class WebsiteCrawlerTests
     {
-        private Mock<PageDownloader> pageDownloaderMock;
-        private Mock<PageParser> pageParserMock;
-
+        private readonly Mock<PageDownloader> _pageDownloaderMock;
+        private readonly Mock<PageParser> _pageParserMock;
+        private readonly WebsiteCrawler _websiteCrawler;
         public WebsiteCrawlerTests()
         {
-            pageDownloaderMock = new Mock<PageDownloader>();
-            pageParserMock = new Mock<PageParser>();
+            _pageDownloaderMock = new Mock<PageDownloader>();
+            _pageParserMock = new Mock<PageParser>();
+            _websiteCrawler = new WebsiteCrawler(_pageDownloaderMock.Object, _pageParserMock.Object);
         }
 
         [Fact]
         public void Crawl_WithOneHtmlPage_ShouldReturnTwoLinks()
         {
             //Arrange
-            pageParserMock.Setup(p => p.GetLinks(It.IsAny<string>(), It.IsAny<Uri>()))
+            _pageParserMock.Setup(p => p.GetLinks(It.IsAny<string>(), It.IsAny<Uri>()))
                 .Returns(new List<Uri>() { new Uri("https://www.example.com/example1/"), new Uri("https://www.example.com/example2/") });
-            var websiteCrawler = new WebsiteCrawler();
 
             //Act
-            var result = websiteCrawler.Crawl(new Uri("https://www.example.com/"), pageDownloaderMock.Object, pageParserMock.Object);
+            var result = _websiteCrawler.Crawl(new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Equal(3, result.Count);
@@ -41,15 +41,14 @@ namespace WebCrawler.Logic.Tests
             //Arrange
             var parserResult1 = new List<Uri>() { new Uri("https://www.example.com/example1/"), new Uri("https://www.example.com/example2/") };
             var parserResult2 = new List<Uri>() { new Uri("https://www.example.com/example3/")};
-            pageParserMock.SetupSequence(p => p.GetLinks(It.IsAny<string>(), It.IsAny<Uri>()))
+            _pageParserMock.SetupSequence(p => p.GetLinks(It.IsAny<string>(), It.IsAny<Uri>()))
                 .Returns(parserResult1)
                 .Returns(parserResult1)
                 .Returns(parserResult2)
                 .Returns(parserResult2);
-            var websiteCrawler = new WebsiteCrawler();
 
             //Act
-            var result = websiteCrawler.Crawl(new Uri("https://www.example.com/"), pageDownloaderMock.Object, pageParserMock.Object);
+            var result = _websiteCrawler.Crawl(new Uri("https://www.example.com/"));
 
             //Assert
             Assert.Equal(4, result.Count);

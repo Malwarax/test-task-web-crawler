@@ -7,7 +7,14 @@ namespace WebCrawler.ConsoleApplication
 {
     public class RedirectionValidator
     {
-        public virtual bool CheckRedirection(string url, ConsoleWrapper console)
+        private readonly ConsoleWrapper _console;
+
+        public RedirectionValidator(ConsoleWrapper console)
+        {
+            _console = console;
+        }
+
+        public virtual bool CheckRedirection(string url)
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "HEAD";
@@ -22,7 +29,7 @@ namespace WebCrawler.ConsoleApplication
             }
             catch
             {
-                console.WriteLine("Error. The server is redirecting the request for this url.");
+                _console.WriteLine("Error. The server is redirecting the request for this url.");
                 result = false;
             }
 

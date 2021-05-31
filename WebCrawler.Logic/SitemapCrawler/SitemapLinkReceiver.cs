@@ -9,40 +9,29 @@ namespace WebCrawler.Logic
     public class SitemapLinkReceiver
     {
 
-        virtual public Uri GetSitemapUri(Uri baseUri, PageDownloader downloader)
+        virtual public Uri GetSitemapUri(Uri baseUri, string robots)
         {
             Uri sitemapUri;
-            try
+            Uri robotsTxtUri = new Uri(baseUri, "/robots.txt");
+
+            var sitemapString = robots.Split('\n')
+            .Select(x => x.Trim())
+            .Where(x => x.StartsWith("Sitemap:"))
+            .FirstOrDefault();
+
+            if (!String.IsNullOrEmpty(sitemapString))
             {
-                Uri robotsTxtUri = new Uri(baseUri, "/robots.txt");
-
-                string fileContent = "";
-
-                fileContent = downloader.GetPage(robotsTxtUri);
-
-                var sitemapString = fileContent.Split('\n')
-                .Select(x => x.Trim())
-                .Where(x => x.StartsWith("Sitemap:"))
-                .FirstOrDefault();
-
-                if (!String.IsNullOrEmpty(sitemapString))
-                {
-                    sitemapString = sitemapString
-                    .Replace("Sitemap:", "")
-                    .Trim();
-                    sitemapUri = new Uri(sitemapString);
-                }
-                else
-                {
-                    sitemapUri = new Uri(baseUri, "/sitemap.xml");
-                }
-
-                return sitemapUri;
+                sitemapString = sitemapString
+                .Replace("Sitemap:", "")
+                .Trim();
+                sitemapUri = new Uri(sitemapString);
             }
-            catch
+            else
             {
-                return sitemapUri = new Uri(baseUri, "/sitemap.xml"); //default sitemap url
+                sitemapUri = new Uri(baseUri, "/sitemap.xml");
             }
+
+            return sitemapUri;
         }
     }
 }
