@@ -4,16 +4,13 @@ using WebCrawler.Data;
 
 namespace WebCrawler.EntityFramework.EntityConfigurations
 {
-    public class TestConfiguration : IEntityTypeConfiguration<Test>
+    public class OnlyWebsiteUrlConfiguration : IEntityTypeConfiguration<OnlyWebsiteUrl>
     {
-        public void Configure(EntityTypeBuilder<Test> builder)
+        public void Configure(EntityTypeBuilder<OnlyWebsiteUrl> builder)
         {
             builder.Property(w => w.Url)
                 .HasMaxLength(1024)
                 .IsRequired(true);
-            builder.Property(w => w.Date)
-                .ValueGeneratedOnAdd()
-                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

@@ -1,9 +1,6 @@
-﻿using ConsoleTables;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
 using WebCrawler.Logic;
 
 namespace WebCrawler.ConsoleApplication
@@ -59,8 +56,10 @@ namespace WebCrawler.ConsoleApplication
 
             Console.WriteLine("Crawling sitemap. It will take some time...");
             var sitemapLinks = sitemapCrawler.Crawl(websiteUrl);
+            var onlySitemapLinks = GetUniqueLinks(sitemapLinks, websiteLinks);
+            var onlyWebsiteLinks = GetUniqueLinks(websiteLinks, sitemapLinks);
 
-            differencePrinter.PrintDifference(sitemapLinks, websiteLinks);
+            differencePrinter.PrintDifference(sitemapLinks.Count, websiteLinks.Count, onlySitemapLinks, onlyWebsiteLinks);
 
             Console.WriteLine("Response time processing. It will take some time...");
             var combinedLinks = sitemapLinks.Union(websiteLinks).ToList();
@@ -68,12 +67,18 @@ namespace WebCrawler.ConsoleApplication
             responcePrinter.PrintTable(performanceEvaluationResult);
 
             Console.WriteLine("Saving result...");
-            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult);
+            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult, onlySitemapLinks, onlyWebsiteLinks);
 
             Console.WriteLine("Enter to exit.");
             Console.ReadLine();
             Environment.Exit(0);
         }
-       
+
+        private List<Uri> GetUniqueLinks(List<Uri> baseLinks, List<Uri> linksToExcept)
+        {
+            return baseLinks
+            .Except(linksToExcept)
+            .ToList();
+        }
     }
 }

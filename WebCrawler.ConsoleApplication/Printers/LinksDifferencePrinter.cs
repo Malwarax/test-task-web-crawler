@@ -8,16 +8,16 @@ namespace WebCrawler.ConsoleApplication
 {
     public class LinksDifferencePrinter
     {
-        public void PrintDifference(List<Uri> sitemapLinks, List<Uri> manuallyCrawledLinks)
+        public void PrintDifference(int sitemapCount, int websiteCount,List<Uri> onlySitemapLinks, List<Uri> onlyWebsiteLinks)
         {
-            Console.WriteLine($"Urls found after crawling a website: {manuallyCrawledLinks.Count}");
-            Console.WriteLine($"Urls found in sitemap: {sitemapLinks.Count}");
+            Console.WriteLine($"Urls found after crawling a website: {websiteCount}");
+            Console.WriteLine($"Urls found in sitemap: {sitemapCount}");
 
             Console.WriteLine("Urls FOUNDED IN SITEMAP.XML but not founded after crawling a web site:");
-            PrintLinks(GetUniqueLinks(sitemapLinks, manuallyCrawledLinks));
+            PrintLinks(onlySitemapLinks);
             
             Console.WriteLine("Urls FOUNDED BY CRAWLING THE WEBSITE but not in sitemap.xml:");
-            PrintLinks(GetUniqueLinks(manuallyCrawledLinks, sitemapLinks));
+            PrintLinks(onlyWebsiteLinks);
         }
 
         private void PrintLinks(List<Uri> linksToPrint)
@@ -36,11 +36,11 @@ namespace WebCrawler.ConsoleApplication
             }
         }
 
-        private List<Uri> GetUniqueLinks(List<Uri> baseLinks, List<Uri> linksToExcept)
-        {
-            return baseLinks
-            .Except(linksToExcept)
-            .ToList(); ;
-        }
+        //private List<Uri> GetUniqueLinks(List<Uri> baseLinks, List<Uri> linksToExcept)
+        //{
+        //    return baseLinks
+        //    .Except(linksToExcept)
+        //    .ToList(); ;
+        //}
     }
 }

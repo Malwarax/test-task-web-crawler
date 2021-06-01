@@ -13,6 +13,10 @@
     <Compile Remove="Migrations\20210531151126_IntResponseTime.Designer.cs" />
     <Compile Remove="Migrations\20210531151716_IntResponseTime.cs" />
     <Compile Remove="Migrations\20210531151716_IntResponseTime.Designer.cs" />
+    <Compile Remove="Migrations\20210601094902_uniqueLinks.cs" />
+    <Compile Remove="Migrations\20210601094902_uniqueLinks.Designer.cs" />
+    <Compile Remove="Migrations\20210601100618_uniqueLinks.cs" />
+    <Compile Remove="Migrations\20210601100618_uniqueLinks.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
