@@ -1,0 +1,95 @@
+﻿@model WebCrawler.WebApplication.Models.TestResultModel
+@{
+    ViewData["Title"] = "Test result page";
+}
+
+<div class="container mt-5">
+    <div class="row border-bottom">
+        <h1 class="h2">@Model.Website</h1>
+    </div>
+
+    <div class="row mt-5 table-responsive">
+        <h1 class="h2">PERFORMANCE</h1>
+        <table id="performanceTable" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="col-6">Url</th>
+                    <th class="col">Timing</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.Performance)
+                {
+                    <tr>
+                        <td>@result.Url</td>
+                        <td>@result.Timing</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row mt-5 table-responsive">
+        <h1 class="h2">URLs NOT FOUND AT WEBSITE</h1>
+        <table id="onlySitemapUrlsTable" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Url</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var url in Model.OnlySitemapUrls)
+                {
+                    <tr>
+                        <td>@url</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row mt-5 table-responsive">
+        <h1 class="h2">URLs NOT FOUND AT SITEMAP</h1>
+        <table id="onlyWebsiteUrlsTable" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Url</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var url in Model.OnlyWebsiteUrls)
+                {
+                    <tr>
+                        <td>@url</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#performanceTable').DataTable({
+            searching: false,
+            ordering: false,
+            order: false,
+        });
+    });
+    $(document).ready(function () {
+        $('#onlySitemapUrlsTable').DataTable({
+            searching: false,
+            ordering: false,
+            order: false,
+        });
+    });
+    $(document).ready(function () {
+        $('#onlyWebsiteUrlsTable').DataTable({
+            searching: false,
+            ordering: false,
+            order: false,
+        });
+    });
+</script>
+

@@ -14,7 +14,7 @@ namespace WebCrawler.Logic.Tests
     public class DbWorkerTests
     {
         private readonly DbWorker _dbWorker;
-        private readonly Mock<IRepository<Test>> _websiteRepositoryMock;
+        private readonly Mock<IRepository<Test>> _testRepositoryMock;
         private readonly Mock<IRepository<PerformanceResult>> _performanceResultRepositoryMock;
         private readonly Mock<IRepository<OnlySitemapUrl>> _onlySitemapUrlRepositoryMock;
         private readonly Mock<IRepository<OnlyWebsiteUrl>> _onlyWebsiteRepositoryMock;
@@ -22,16 +22,16 @@ namespace WebCrawler.Logic.Tests
 
         public DbWorkerTests()
         {
-            _websiteRepositoryMock = new Mock<IRepository<Test>>();
+            _testRepositoryMock = new Mock<IRepository<Test>>();
             _performanceResultRepositoryMock = new Mock<IRepository<PerformanceResult>>();
             _onlySitemapUrlRepositoryMock = new Mock<IRepository<OnlySitemapUrl>>();
             _onlyWebsiteRepositoryMock = new Mock<IRepository<OnlyWebsiteUrl>>();
-            _dbWorker = new DbWorker(_performanceResultRepositoryMock.Object, _websiteRepositoryMock.Object, _onlySitemapUrlRepositoryMock.Object, _onlyWebsiteRepositoryMock.Object);
+            _dbWorker = new DbWorker(_performanceResultRepositoryMock.Object, _testRepositoryMock.Object, _onlySitemapUrlRepositoryMock.Object, _onlyWebsiteRepositoryMock.Object);
             _url = new Uri("https://www.example.com");
         }
 
         [Fact]
-        public void SaveResult_ShouldAddWebsite()
+        public void SaveResult_ShouldAddTest()
         {
             //Arrange
             var performanceResultModel = new List<PerformanceResultDTO>() { new PerformanceResultDTO() };
@@ -41,7 +41,7 @@ namespace WebCrawler.Logic.Tests
             _dbWorker.SaveResult(_url, performanceResultModel, urlList, urlList);
 
             //Assert
-            _websiteRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Test>(),It.IsAny<CancellationToken>()),Times.Once);
+            _testRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Test>(),It.IsAny<CancellationToken>()),Times.Once);
         }
         
         [Fact]

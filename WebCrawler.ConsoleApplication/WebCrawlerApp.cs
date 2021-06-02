@@ -67,7 +67,7 @@ namespace WebCrawler.ConsoleApplication
             responcePrinter.PrintTable(performanceEvaluationResult);
 
             Console.WriteLine("Saving result...");
-            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult, onlySitemapLinks, onlyWebsiteLinks);
+            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult, onlySitemapLinks, onlyWebsiteLinks).Wait();
 
             Console.WriteLine("Enter to exit.");
             Console.ReadLine();

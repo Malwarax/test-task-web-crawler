@@ -14,6 +14,7 @@ namespace WebCrawler.EntityFramework.EntityConfigurations
             builder.Property(w => w.Date)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("GETUTCDATE()");
+            //"Convert(date,GETUTCDATE())"
         }
     }
 }
