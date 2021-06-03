@@ -14,10 +14,10 @@ namespace WebCrawler.ConsoleApplication
             Console.WriteLine($"Urls found in sitemap: {result.Where(r => r.InSitemap==true).Count()}");
 
             Console.WriteLine("Urls FOUNDED IN SITEMAP.XML but not founded after crawling a web site:");
-            PrintLinks(result.Where(r => r.InSitemap==true && r.InWebsite==false).Select(r=>r.Link).ToList());
+            PrintLinks(result.Where(r => r.InSitemap==true && r.InWebsite==false).Select(r=>r.Url).ToList());
 
             Console.WriteLine("Urls FOUNDED BY CRAWLING THE WEBSITE but not in sitemap.xml:");
-            PrintLinks(result.Where(r => r.InSitemap == false && r.InWebsite == true).Select(r => r.Link).ToList());
+            PrintLinks(result.Where(r => r.InSitemap == false && r.InWebsite == true).Select(r => r.Url).ToList());
         }
 
         private void PrintLinks(List<string> linksToPrint)

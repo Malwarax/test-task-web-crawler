@@ -29,17 +29,25 @@ namespace WebCrawler.WebApplication.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(string url)
+        public IActionResult Index(UserInputModel input)
         {
-            var websiteUrl = new Uri(url);
-            var websiteUrls = _websiteCrawler.Crawl(websiteUrl);
-            var sitemapUrls = _sitemapCrawler.Crawl(websiteUrl);
-            var performanceEvaluationResult = _performanceEvaluationGetter.PrepareLinks(websiteUrls, sitemapUrls);
+            
+            if(ModelState.IsValid)
+            {
+                var websiteUrl = new Uri(input.Url);
+                var websiteUrls = _websiteCrawler.Crawl(websiteUrl);
+                var sitemapUrls = _sitemapCrawler.Crawl(websiteUrl);
+                var performanceEvaluationResult = _performanceEvaluationGetter.PrepareLinks(websiteUrls, sitemapUrls);
 
-            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult).Wait();
+                _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult).Wait();
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(new TestsModel() { Tests = _dbWorker.GetAllTests() });
+            }
+
         }
-
     }
 }

@@ -5,10 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebCrawler.EntityFramework;
 using WebCrawler.Logic;
 
@@ -23,15 +19,11 @@ namespace WebCrawler.WebApplication
 
         public IConfiguration Configuration { get; }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEfRepository<WebCrawlerDbContext>(options => options.UseSqlServer(@"Server=localhost\MSSQLSERVER01;Database=WebCrawlerDB;Trusted_Connection=True"));
             services.AddScoped<DbWorker>();
             services.AddScoped<PageDownloader>();
-            //services.AddScoped<ConsoleWrapper>();
-            //services.AddScoped<UrlValidator>();
-            //services.AddScoped<RedirectionValidator>();
             services.AddScoped<PageParser>();
             services.AddScoped<WebsiteCrawler>();
             services.AddScoped<SitemapLinkReceiver>();
@@ -42,7 +34,6 @@ namespace WebCrawler.WebApplication
             services.AddControllersWithViews();
         }
 
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -51,7 +42,6 @@ namespace WebCrawler.WebApplication
             }
             else
             {
-
                 app.UseHsts();
             }
             app.UseHttpsRedirection();

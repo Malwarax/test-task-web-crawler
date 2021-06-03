@@ -22,10 +22,7 @@ namespace WebCrawler.ConsoleApplication
 
         public Uri GetUserInput()
         {
-            bool isThisUrlHasValidationErrors;
-            Uri websiteUrl = null;
-
-            do
+            while(true)
             {
                 Console.WriteLine(@"Enter the website url e.g. https://www.example.com/ (Enter to exit):");
                 string url = Console.ReadLine();
@@ -35,16 +32,24 @@ namespace WebCrawler.ConsoleApplication
                     Environment.Exit(0);
                 }
 
-                isThisUrlHasValidationErrors = _urlValidator.CheckUrl(url) == false || _redirectionValidator.CheckRedirection(url) == false;
+                var urlValidatorResult = _urlValidator.CheckUrl(url);
 
-                if (!isThisUrlHasValidationErrors)
+                if (urlValidatorResult.Result == false)
                 {
-                    websiteUrl = new Uri(url);
+                    Console.WriteLine(urlValidatorResult.Message);
+                    continue;
                 }
-            }
-            while (isThisUrlHasValidationErrors);
 
-            return websiteUrl;
+                var redirectionValidatorResult = _redirectionValidator.CheckRedirection(url);
+
+                if (redirectionValidatorResult.Result == false)
+                {
+                    Console.WriteLine(redirectionValidatorResult.Message);
+                    continue;
+                }
+
+                return new Uri(url);
+            }
         }
 
         public void PrintUrlsDifference(List<PerformanceResultDTO> result)

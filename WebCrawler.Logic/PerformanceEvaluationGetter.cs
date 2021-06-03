@@ -36,7 +36,7 @@ namespace WebCrawler.Logic
                     inSitemap = true;
                 }
 
-                result.Add(new PerformanceResultDTO { Link = url.AbsoluteUri, ResponseTime = _performanceEvaluator.GetResponceTime(url), InSitemap=inSitemap, InWebsite=inWebsite });
+                result.Add(new PerformanceResultDTO { Url = url.AbsoluteUri, ResponseTime = _performanceEvaluator.GetResponceTime(url), InSitemap=inSitemap, InWebsite=inWebsite });
             }
 
             return result

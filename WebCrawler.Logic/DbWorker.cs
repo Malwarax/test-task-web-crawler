@@ -28,7 +28,7 @@ namespace WebCrawler.Logic
             await _testRepository.AddAsync(newTest);
             await _testRepository.SaveChangesAsync();
 
-            _performanceResultRepository.AddRange(performanceResults.Select(p => new PerformanceResult() { Url = p.Link, ResponseTime = p.ResponseTime, InSitemap=p.InSitemap, InWebsite=p.InWebsite, TestId = newTest.Id }));
+            _performanceResultRepository.AddRange(performanceResults.Select(p => new PerformanceResult() { Url = p.Url, ResponseTime = p.ResponseTime, InSitemap=p.InSitemap, InWebsite=p.InWebsite, TestId = newTest.Id }));
 
             await _performanceResultRepository.SaveChangesAsync();
         }

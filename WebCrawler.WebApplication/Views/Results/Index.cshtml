@@ -21,7 +21,7 @@
                 @foreach (var result in Model.Performance)
                 {
                     <tr>
-                        <td>@result.Link</td>
+                        <td>@result.Url</td>
                         <td>@result.ResponseTime</td>
                     </tr>
                 }
@@ -38,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var url in Model.OnlySitemapUrls)
+                @foreach (var url in Model.UrlsFoundOnlyInSitemap)
                 {
                     <tr>
                         <td>@url</td>
@@ -57,7 +57,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var url in Model.OnlyWebsiteUrls)
+                @foreach (var url in Model.UrlsFoundOnlyInWebsite)
                 {
                     <tr>
                         <td>@url</td>

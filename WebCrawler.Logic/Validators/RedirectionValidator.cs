@@ -2,25 +2,20 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using WebCrawler.Logic.Models;
 
-namespace WebCrawler.ConsoleApplication
+namespace WebCrawler.Logic
 {
     public class RedirectionValidator
     {
-        private readonly ConsoleWrapper _console;
-
-        public RedirectionValidator(ConsoleWrapper console)
+        public virtual ValidationResultModel CheckRedirection(string url)
         {
-            _console = console;
-        }
 
-        public virtual bool CheckRedirection(string url)
-        {
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "HEAD";
             request.AllowAutoRedirect = false;
             bool result = true;
-
+            string message = "";
             try
             {
                 using (var response = request.GetResponse() as HttpWebResponse)
@@ -29,19 +24,19 @@ namespace WebCrawler.ConsoleApplication
             }
             catch (WebException ex)
             {
-                if(ex.Message.Contains("301"))
+                if (ex.Message.Contains("301"))
                 {
-                    _console.WriteLine("Error. The server is redirecting the request for this url.");
+                    message="Error. The server is redirecting the request for this url.";
                 }
                 else
                 {
-                    _console.WriteLine("Error. No connection could be made.");
+                    message="Error. No connection could be made.";
                 }
 
                 result = false;
             }
 
-            return result;
+            return new ValidationResultModel { Result=result, Message=message};
         }
     }
 }

@@ -14,7 +14,7 @@ namespace WebCrawler.ConsoleApplication
 
             for (int i = 1; i <= resultList.Count; i++)
             {
-                table.AddRow(i, resultList[i - 1].Link, resultList[i - 1].ResponseTime + " ms");
+                table.AddRow(i, resultList[i - 1].Url, resultList[i - 1].ResponseTime + " ms");
             }
 
             table.Options.EnableCount = false;

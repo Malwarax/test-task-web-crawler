@@ -37,7 +37,7 @@ namespace WebCrawler.Logic.Tests
             var result = _getter.PrepareLinks(new List<Uri>() {new Uri("https://www.example.com/") }, new List<Uri>());
 
             //Assert
-            Assert.Equal("https://www.example.com/", result[0].Link);
+            Assert.Equal("https://www.example.com/", result[0].Url);
             Assert.Equal(100, result[0].ResponseTime);
         }
 
@@ -70,9 +70,9 @@ namespace WebCrawler.Logic.Tests
 
             //Assert
             Assert.Equal(3, result.Count);
-            Assert.Contains("https://www.example.com/example1/", result[0].Link);
-            Assert.Contains("https://www.example.com/", result[1].Link);
-            Assert.Contains("https://www.example.com/example2/", result[2].Link);
+            Assert.Contains("https://www.example.com/example1/", result[0].Url);
+            Assert.Contains("https://www.example.com/", result[1].Url);
+            Assert.Contains("https://www.example.com/example2/", result[2].Url);
         }
 
         [Fact]
