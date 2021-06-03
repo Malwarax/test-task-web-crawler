@@ -15,7 +15,7 @@ namespace WebCrawler.Logic.Tests
             var evaluator = new PerformanceEvaluator();
 
             //Act
-            var result = evaluator.GetResponceTime(link).Milliseconds;
+            var result = evaluator.GetResponceTime(link);
 
             //Assert
             Assert.InRange(result, 50, 1000);

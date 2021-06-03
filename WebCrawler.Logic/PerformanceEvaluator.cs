@@ -8,7 +8,7 @@ namespace WebCrawler.Logic
 {
     public class PerformanceEvaluator
     {
-        public virtual TimeSpan GetResponceTime(Uri link)
+        public virtual int GetResponceTime(Uri link)
         {
             TimeSpan result = new TimeSpan();
             try 
@@ -27,7 +27,7 @@ namespace WebCrawler.Logic
                 Console.WriteLine($"Error with getting the responce from {link}. The result for this url will be 0");
             }
 
-            return result;
+            return result.Milliseconds;
         }
     }
 }

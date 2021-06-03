@@ -27,6 +27,11 @@ namespace WebCrawler.Logic
 
                 string hrefValue = link.GetAttributeValue("href", string.Empty);
 
+                if (IsLinkWithExtension(hrefValue))
+                {
+                    continue;
+                }
+
                 Uri linkToAdd = null;
 
                 if (hrefValue.StartsWith("/") && hrefValue.Length >= 1)
@@ -49,8 +54,10 @@ namespace WebCrawler.Logic
                 {
                     var domain = linkToAdd.GetLeftPart(UriPartial.Authority);
                     if (domain != websiteUri.GetLeftPart(UriPartial.Authority))
+                    {
                         process = false;
-
+                    }
+                    
                     if (process && linkToAdd != null)
                     {
                         var clearLink = linkToAdd.GetLeftPart(UriPartial.Path);
@@ -63,6 +70,28 @@ namespace WebCrawler.Logic
             return result
                 .Distinct()
                 .ToList();
+        }
+        private bool IsLinkWithExtension(string hrefValue)
+        {
+            string[] extensions = new string[]
+            {
+                ".css",
+                ".json",
+                ".js",
+                ".exe",
+                ".jpeg",
+                ".sql",
+                ".png",
+                ".jpg",
+                ".svg",
+                ".ttf",
+                ".woff",
+                ".woff2",
+                ".ico",
+                "@",
+            };
+
+            return extensions.Any(p => hrefValue.Contains(p));
         }
     }
 }

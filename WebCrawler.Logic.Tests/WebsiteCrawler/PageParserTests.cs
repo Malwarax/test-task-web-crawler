@@ -80,5 +80,31 @@ namespace WebCrawler.Logic.Tests
             //Assert
             Assert.Empty(result);
         }
+
+        [Fact]
+        public void GetLinks_ShouldIgnoreLinksWithFileExtension()
+        {
+            //Arrange
+            string document = @"<body><a href=""https://www.example.com/example.exe"">Url</a>";
+
+            //Act
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
+
+            //Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void GetLinks_ShouldIgnoreLinksWithAlphaSymbol()
+        {
+            //Arrange
+            string document = @"<body><a href=""https://www.example.com/git%20ssh:/git@bitbucket.org"">Url</a>";
+
+            //Act
+            List<Uri> result = _parser.GetLinks(document, new Uri("https://www.example.com/"));
+
+            //Assert
+            Assert.Empty(result);
+        }
     }
 }

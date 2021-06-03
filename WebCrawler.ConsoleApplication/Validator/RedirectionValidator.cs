@@ -27,9 +27,17 @@ namespace WebCrawler.ConsoleApplication
                 {
                 }
             }
-            catch
+            catch (WebException ex)
             {
-                _console.WriteLine("Error. The server is redirecting the request for this url.");
+                if(ex.Message.Contains("301"))
+                {
+                    _console.WriteLine("Error. The server is redirecting the request for this url.");
+                }
+                else
+                {
+                    _console.WriteLine("Error. No connection could be made.");
+                }
+
                 result = false;
             }
 

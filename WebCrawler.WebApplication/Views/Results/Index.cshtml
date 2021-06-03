@@ -21,8 +21,8 @@
                 @foreach (var result in Model.Performance)
                 {
                     <tr>
-                        <td>@result.Url</td>
-                        <td>@result.Timing</td>
+                        <td>@result.Link</td>
+                        <td>@result.ResponseTime</td>
                     </tr>
                 }
             </tbody>
@@ -75,6 +75,7 @@
             searching: false,
             ordering: false,
             order: false,
+            "pageLength": 50
         });
     });
     $(document).ready(function () {
@@ -82,6 +83,7 @@
             searching: false,
             ordering: false,
             order: false,
+            "pageLength": 50
         });
     });
     $(document).ready(function () {
@@ -89,6 +91,7 @@
             searching: false,
             ordering: false,
             order: false,
+            "pageLength": 50
         });
     });
 </script>

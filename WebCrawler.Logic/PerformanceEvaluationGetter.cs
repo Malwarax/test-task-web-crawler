@@ -28,5 +28,34 @@ namespace WebCrawler.Logic
                 .OrderBy(r => r.ResponseTime)
                 .ToList();
         }
+
+        public virtual List<PerformanceResultDTO> PrepareLinks(List<Uri> websiteUrls, List<Uri> sitemapUrls)
+        {
+            List<PerformanceResultDTO> result = new List<PerformanceResultDTO>();
+
+            var combinedUrls = sitemapUrls.Union(websiteUrls).ToList();
+
+            foreach (var url in combinedUrls)
+            {
+                bool inSitemap = false;
+                bool inWebsite = false;
+
+                if(websiteUrls.Contains(url))
+                {
+                    inSitemap = true;
+                }
+
+                if(sitemapUrls.Contains(url))
+                {
+                    inWebsite = true;
+                }
+
+                result.Add(new PerformanceResultDTO { Link = url.AbsoluteUri, ResponseTime = _performanceEvaluator.GetResponceTime(url), InSitemap=inSitemap, InWebsite=inWebsite });
+            }
+
+            return result
+                .OrderBy(r => r.ResponseTime)
+                .ToList();
+        }
     }
 }

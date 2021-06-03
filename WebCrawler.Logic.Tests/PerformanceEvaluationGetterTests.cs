@@ -31,14 +31,14 @@ namespace WebCrawler.Logic.Tests
         public void PrepareLinks_WithOneLink_ShouldReturnResponceTimeResult()
         {
             //Arrange
-            _performanceEvaluatorMock.Setup(p => p.GetResponceTime(It.IsAny<Uri>())).Returns(new TimeSpan(100));
+            _performanceEvaluatorMock.Setup(p => p.GetResponceTime(It.IsAny<Uri>())).Returns(100);
 
             //Act
             var result = _getter.PrepareLinks(new List<Uri>() {new Uri("https://www.example.com/") });
 
             //Assert
             Assert.Equal("https://www.example.com/", result[0].Link);
-            Assert.Equal(new TimeSpan(100), result[0].ResponseTime);
+            Assert.Equal(100, result[0].ResponseTime);
         }
 
         [Fact]
@@ -47,9 +47,9 @@ namespace WebCrawler.Logic.Tests
             //Arrange
             var link = new Uri("https://www.example.com/");
             _performanceEvaluatorMock.SetupSequence(p => p.GetResponceTime(It.IsAny<Uri>()))
-                .Returns(new TimeSpan(300))
-                .Returns(new TimeSpan(100))
-                .Returns(new TimeSpan(200));
+                .Returns(300)
+                .Returns(100)
+                .Returns(200);
 
             //Act
             var result = _getter.PrepareLinks(new List<Uri>() { link,link,link });

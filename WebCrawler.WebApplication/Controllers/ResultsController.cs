@@ -22,7 +22,7 @@ namespace WebApplication.Controllers
         public IActionResult Index(int id)
         {
             var performance = _dbWorker.GetPerformanceResultsByTestId(id)
-                .Select(p => new PerformanceResultModel { Url = p.Url, Timing = p.ResponseTime })
+                .Select(p => new PerformanceResultDTO { Link = p.Url, ResponseTime = p.ResponseTime })
                 .ToList();
             var testUrl = _dbWorker.GetUrlByTestId(id);
             var onlySitemapUrls=_dbWorker.GetOnlySitemapUrlsByTestId(id);
