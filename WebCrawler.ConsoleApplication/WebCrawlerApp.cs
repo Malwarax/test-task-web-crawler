@@ -37,7 +37,7 @@ namespace WebCrawler.ConsoleApplication
             _userInteractionService.PrintPerformanceResultTable(performanceEvaluationResult);
 
             Console.WriteLine("Saving result...");
-            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult,new List<Uri>(), new List<Uri>()).Wait();
+            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult).Wait();
 
             Console.WriteLine("Enter to exit.");
             Console.ReadLine();

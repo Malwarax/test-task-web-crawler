@@ -13,8 +13,6 @@ namespace WebCrawler.EntityFramework
         }
 
         public DbSet<PerformanceResult> PerformanceResults { get; set; }
-        public DbSet<OnlySitemapUrl> OnlySitemapUrls { get; set; }
-        public DbSet<OnlyWebsiteUrl> OnlyWebsiteUrls { get; set; }
         public DbSet<Test> Tests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

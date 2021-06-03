@@ -10,12 +10,16 @@ namespace WebCrawler.WebApplication.Controllers
     public class HomeController : Controller
     {
         private readonly DbWorker _dbWorker;
-        private readonly Crawler _crawler;
+        private readonly WebsiteCrawler _websiteCrawler;
+        private readonly SitemapCrawler _sitemapCrawler;
+        private readonly PerformanceEvaluationGetter _performanceEvaluationGetter;
 
-        public HomeController(DbWorker dbWorker, Crawler crawler)
+        public HomeController(DbWorker dbWorker, WebsiteCrawler websiteCrawler, SitemapCrawler sitemapCrawler, PerformanceEvaluationGetter performanceEvaluationGetter)
         {
             _dbWorker = dbWorker;
-            _crawler = crawler;
+            _websiteCrawler = websiteCrawler;
+            _sitemapCrawler = sitemapCrawler;
+            _performanceEvaluationGetter = performanceEvaluationGetter;
         }
 
         [HttpGet]
@@ -28,14 +32,11 @@ namespace WebCrawler.WebApplication.Controllers
         public IActionResult Index(string url)
         {
             var websiteUrl = new Uri(url);
+            var websiteUrls = _websiteCrawler.Crawl(websiteUrl);
+            var sitemapUrls = _sitemapCrawler.Crawl(websiteUrl);
+            var performanceEvaluationResult = _performanceEvaluationGetter.PrepareLinks(websiteUrls, sitemapUrls);
 
-            _crawler.Crawl(new Uri(url));
-
-            var onlySitemapLinks = _crawler.GetOnlySitemapUrls();
-            var onlyWebsiteLinks = _crawler.GetOnlyWebsiteUrls();
-            var performanceEvaluationResult = _crawler.GetPerformance();
-
-            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult, onlySitemapLinks, onlyWebsiteLinks).Wait();
+            _dbWorker.SaveResult(websiteUrl, performanceEvaluationResult).Wait();
 
             return RedirectToAction("Index");
         }

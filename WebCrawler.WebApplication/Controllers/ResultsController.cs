@@ -21,12 +21,12 @@ namespace WebApplication.Controllers
 
         public IActionResult Index(int id)
         {
+            var testUrl = _dbWorker.GetUrlByTestId(id);
             var performance = _dbWorker.GetPerformanceResultsByTestId(id)
                 .Select(p => new PerformanceResultDTO { Link = p.Url, ResponseTime = p.ResponseTime })
                 .ToList();
-            var testUrl = _dbWorker.GetUrlByTestId(id);
-            var onlySitemapUrls=_dbWorker.GetOnlySitemapUrlsByTestId(id);
-            var onlyWebsiteUrls = _dbWorker.GetOnlyWebsiteUrlsByTestId(id); 
+            var onlySitemapUrls=_dbWorker.GetUrlsFoundOnlyInSitemapByTestId(id);
+            var onlyWebsiteUrls = _dbWorker.GetUrlsFoundOnlyInWebsiteByTestId(id); 
 
             return View(new TestResultModel() { Website = testUrl, Performance = performance, OnlySitemapUrls = onlySitemapUrls, OnlyWebsiteUrls = onlyWebsiteUrls });
         }

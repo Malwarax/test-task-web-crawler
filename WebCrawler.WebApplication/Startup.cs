@@ -28,7 +28,17 @@ namespace WebCrawler.WebApplication
         {
             services.AddEfRepository<WebCrawlerDbContext>(options => options.UseSqlServer(@"Server=localhost\MSSQLSERVER01;Database=WebCrawlerDB;Trusted_Connection=True"));
             services.AddScoped<DbWorker>();
-            services.AddScoped<Crawler>();
+            services.AddScoped<PageDownloader>();
+            //services.AddScoped<ConsoleWrapper>();
+            //services.AddScoped<UrlValidator>();
+            //services.AddScoped<RedirectionValidator>();
+            services.AddScoped<PageParser>();
+            services.AddScoped<WebsiteCrawler>();
+            services.AddScoped<SitemapLinkReceiver>();
+            services.AddScoped<SitemapParser>();
+            services.AddScoped<SitemapCrawler>();
+            services.AddScoped<PerformanceEvaluator>();
+            services.AddScoped<PerformanceEvaluationGetter>();
             services.AddControllersWithViews();
         }
 

@@ -15,25 +15,11 @@ namespace WebCrawler.Logic
             _performanceEvaluator = performanceEvaluator;
         }
 
-        public virtual List<PerformanceResultDTO> PrepareLinks(List<Uri> links)
+        public virtual List<PerformanceResultDTO> PrepareLinks (List<Uri> websiteUrls, List<Uri> sitemapUrls)
         {
             List<PerformanceResultDTO> result = new List<PerformanceResultDTO>();
 
-            foreach (var link in links)
-            {
-                result.Add(new PerformanceResultDTO { Link = link.AbsoluteUri, ResponseTime = _performanceEvaluator.GetResponceTime(link) });
-            }
-
-            return result
-                .OrderBy(r => r.ResponseTime)
-                .ToList();
-        }
-
-        public virtual List<PerformanceResultDTO> PrepareLinks(List<Uri> websiteUrls, List<Uri> sitemapUrls)
-        {
-            List<PerformanceResultDTO> result = new List<PerformanceResultDTO>();
-
-            var combinedUrls = sitemapUrls.Union(websiteUrls).ToList();
+            var combinedUrls = websiteUrls.Union(sitemapUrls).ToList();
 
             foreach (var url in combinedUrls)
             {
@@ -42,12 +28,12 @@ namespace WebCrawler.Logic
 
                 if(websiteUrls.Contains(url))
                 {
-                    inSitemap = true;
+                    inWebsite = true;
                 }
 
                 if(sitemapUrls.Contains(url))
                 {
-                    inWebsite = true;
+                    inSitemap = true;
                 }
 
                 result.Add(new PerformanceResultDTO { Link = url.AbsoluteUri, ResponseTime = _performanceEvaluator.GetResponceTime(url), InSitemap=inSitemap, InWebsite=inWebsite });

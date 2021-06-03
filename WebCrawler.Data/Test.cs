@@ -11,7 +11,5 @@ namespace WebCrawler.Data
         public DateTime? Date { get; set; }
 
         public List<PerformanceResult> PerformanceResults { get; set; }
-        public List<OnlySitemapUrl> OnlySitemapUrls { get; set; }
-        public List<OnlyWebsiteUrl> OnlyWebsiteUrls { get; set; }
     }
 }

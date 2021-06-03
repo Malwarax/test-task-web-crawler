@@ -21,7 +21,7 @@ namespace WebCrawler.Logic.Tests
         public void PrepareLinks_WithEmptyLinksList_ShouldReturnEmptyList()
         {
             //Act
-            var result = _getter.PrepareLinks(new List<Uri>());
+            var result = _getter.PrepareLinks(new List<Uri>(), new List<Uri>());
 
             //Assert
             Assert.Empty(result);
@@ -34,7 +34,7 @@ namespace WebCrawler.Logic.Tests
             _performanceEvaluatorMock.Setup(p => p.GetResponceTime(It.IsAny<Uri>())).Returns(100);
 
             //Act
-            var result = _getter.PrepareLinks(new List<Uri>() {new Uri("https://www.example.com/") });
+            var result = _getter.PrepareLinks(new List<Uri>() {new Uri("https://www.example.com/") }, new List<Uri>());
 
             //Assert
             Assert.Equal("https://www.example.com/", result[0].Link);
@@ -52,10 +52,53 @@ namespace WebCrawler.Logic.Tests
                 .Returns(200);
 
             //Act
-            var result = _getter.PrepareLinks(new List<Uri>() { link,link,link });
+            var result = _getter.PrepareLinks(new List<Uri>() { link,link,link }, new List<Uri>());
 
             //Assert
             Assert.Equal(result.OrderBy(r => r.ResponseTime), result);
         }
+
+        [Fact]
+        public void PrepareLinks_WithFourLinks_ShouldCombineLinks()
+        {
+            //Arrange
+            var websiteUrls = new List<Uri>() { new Uri("https://www.example.com/example1/"), new Uri("https://www.example.com/") };
+            var sitemapUrls = new List<Uri>() { new Uri("https://www.example.com/"), new Uri("https://www.example.com/example2/") };
+
+            //Act
+            var result = _getter.PrepareLinks(websiteUrls, sitemapUrls);
+
+            //Assert
+            Assert.Equal(3, result.Count);
+            Assert.Contains("https://www.example.com/example1/", result[0].Link);
+            Assert.Contains("https://www.example.com/", result[1].Link);
+            Assert.Contains("https://www.example.com/example2/", result[2].Link);
+        }
+
+        [Fact]
+        public void PrepareLinks_WithFourLinks_ShouldFindUniqueLinks()
+        {
+            //Arrange
+            _performanceEvaluatorMock.Setup(p => p.GetResponceTime(It.IsAny<Uri>())).Returns(100);
+            var websiteUrls = new  List<Uri>() { new Uri("https://www.example.com/example1/"), new Uri("https://www.example.com/") };
+            var sitemapUrls = new List<Uri>() { new Uri("https://www.example.com/"), new Uri("https://www.example.com/example2/") };
+
+            //Act
+            var result = _getter.PrepareLinks(websiteUrls,sitemapUrls);
+
+            //Assert
+            Assert.Equal(3, result.Count);
+
+            Assert.True(result[0].InWebsite);
+            Assert.False(result[0].InSitemap);
+
+            Assert.True(result[1].InWebsite);
+            Assert.True(result[1].InSitemap);
+
+            Assert.False(result[2].InWebsite);
+            Assert.True(result[2].InSitemap);
+        }
+
+
     }
 }

@@ -41,7 +41,6 @@ namespace WebCrawler.ConsoleApplication
                 {
                     websiteUrl = new Uri(url);
                 }
-
             }
             while (isThisUrlHasValidationErrors);
 

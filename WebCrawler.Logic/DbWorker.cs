@@ -14,30 +14,23 @@ namespace WebCrawler.Logic
     {
         private readonly IRepository<PerformanceResult> _performanceResultRepository;
         private readonly IRepository<Test> _testRepository;
-        private readonly IRepository<OnlySitemapUrl> _onlySitemapUrlRepository;
-        private readonly IRepository<OnlyWebsiteUrl> _onlyWebsiteUrlRepository;
 
-        public DbWorker(IRepository<PerformanceResult> performanceResultRepository, IRepository<Test> websiteRepository, IRepository<OnlySitemapUrl> onlySitemapUrlRepository, IRepository<OnlyWebsiteUrl> onlyWebsiteUrlRepository)
+
+        public DbWorker(IRepository<PerformanceResult> performanceResultRepository, IRepository<Test> websiteRepository)
         {
             _performanceResultRepository = performanceResultRepository;
             _testRepository = websiteRepository;
-            _onlySitemapUrlRepository= onlySitemapUrlRepository;
-            _onlyWebsiteUrlRepository=onlyWebsiteUrlRepository;
-    }
+        }
 
-        public async Task SaveResult(Uri websiteUrl, List<PerformanceResultDTO> performanceResults, List<Uri> onlySitemapUrls, List<Uri> onlyWebsiteUrls)
+        public async Task SaveResult(Uri websiteUrl, List<PerformanceResultDTO> performanceResults)
         {
             var newTest = new Test { Url = websiteUrl.AbsoluteUri };
             await _testRepository.AddAsync(newTest);
             await _testRepository.SaveChangesAsync();
 
-            _performanceResultRepository.AddRange(performanceResults.Select(p => new PerformanceResult() { Url = p.Link, ResponseTime = p.ResponseTime, TestId = newTest.Id }));
-            _onlySitemapUrlRepository.AddRange(onlySitemapUrls.Select(p => new OnlySitemapUrl { Url = p.AbsoluteUri, TestId = newTest.Id }));
-            _onlyWebsiteUrlRepository.AddRange(onlyWebsiteUrls.Select(p => new OnlyWebsiteUrl { Url = p.AbsoluteUri, TestId = newTest.Id }));
+            _performanceResultRepository.AddRange(performanceResults.Select(p => new PerformanceResult() { Url = p.Link, ResponseTime = p.ResponseTime, InSitemap=p.InSitemap, InWebsite=p.InWebsite, TestId = newTest.Id }));
 
             await _performanceResultRepository.SaveChangesAsync();
-            await _onlySitemapUrlRepository.SaveChangesAsync();
-            await _onlyWebsiteUrlRepository.SaveChangesAsync();
         }
 
         public List<Test> GetAllTests()
@@ -53,20 +46,18 @@ namespace WebCrawler.Logic
                 .ToList();
         }
 
-        public List<string> GetOnlySitemapUrlsByTestId(int id)
+        public List<string> GetUrlsFoundOnlyInSitemapByTestId(int id)
         {
-            return _onlySitemapUrlRepository.GetAll()
-                .Where(p => p.TestId == id)
-                .OrderBy(p => p.Url)
+            return _performanceResultRepository.GetAll()
+                .Where(p => p.TestId == id && p.InSitemap == true && p.InWebsite == false)
                 .Select(p => p.Url)
                 .ToList();
         }
 
-        public List<string> GetOnlyWebsiteUrlsByTestId(int id)
+        public List<string> GetUrlsFoundOnlyInWebsiteByTestId(int id)
         {
-           return _onlyWebsiteUrlRepository.GetAll()
-                .Where(p => p.TestId == id)
-                .OrderBy(p => p.Url)
+            return _performanceResultRepository.GetAll()
+                .Where(p => p.TestId == id && p.InSitemap == false && p.InWebsite == true)
                 .Select(p => p.Url)
                 .ToList();
         }
