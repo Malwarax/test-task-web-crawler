@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using WebCrawler.EntityFramework;
 using WebCrawler.Logic;
+using WebCrawler.Logic.Validators;
 
 namespace WebCrawler.ConsoleApplication
 {
@@ -39,7 +40,7 @@ namespace WebCrawler.ConsoleApplication
                         services.AddScoped<PerformanceEvaluationGetter>();
                         services.AddScoped<LinksDifferencePrinter>();
                         services.AddScoped<ResponsePrinter>();
-                        services.AddScoped<UserInteractionService>();
+                        services.AddScoped<InputValidator>();
                         services.AddScoped<WebCrawlerApp>();
                     }).ConfigureLogging(options => options.SetMinimumLevel(LogLevel.Error));
     }
