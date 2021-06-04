@@ -40,9 +40,9 @@ namespace WebCrawler.WebApplication.Controllers
                 _crawlerService.Crawl(input.Url);
             }
 
-           return View(new TestsModel() { Tests = _dbWorker.GetAllTests()});
-            
+            var testsModel = new TestsModel() { Tests = _dbWorker.GetAllTests() };
 
+           return View(testsModel);  
         }
     }
 }

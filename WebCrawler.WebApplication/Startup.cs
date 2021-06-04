@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebCrawler.EntityFramework;
-using WebCrawler.Logic;
-using WebCrawler.Logic.Validators;
+using WebCrawler.WebApplication.Extensions;
 using WebCrawler.WebApplication.Services;
 
 namespace WebCrawler.WebApplication
@@ -23,20 +21,9 @@ namespace WebCrawler.WebApplication
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddEfRepository<WebCrawlerDbContext>(options => options.UseSqlServer(@"Server=localhost\MSSQLSERVER01;Database=WebCrawlerDB;Trusted_Connection=True"));
-            services.AddScoped<DbWorker>();
-            services.AddScoped<PageDownloader>();
-            services.AddScoped<PageParser>();
-            services.AddScoped<WebsiteCrawler>();
-            services.AddScoped<SitemapLinkReceiver>();
-            services.AddScoped<SitemapParser>();
-            services.AddScoped<SitemapCrawler>();
-            services.AddScoped<PerformanceEvaluator>();
-            services.AddScoped<PerformanceEvaluationGetter>();
+            services.AddEfRepository<WebCrawlerDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WebCrawlerDB")));
+            services.AddWebCrawlerLogicServices();
             services.AddScoped<CrawlerService>();
-            services.AddScoped<UrlValidator>();
-            services.AddScoped<RedirectionValidator>();
-            services.AddScoped<InputValidator>();
             services.AddControllersWithViews();
         }
 
