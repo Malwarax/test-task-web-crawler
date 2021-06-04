@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebCrawler.EntityFramework;
 using WebCrawler.Logic;
+using WebCrawler.WebApplication.Services;
 
 namespace WebCrawler.WebApplication
 {
@@ -31,6 +32,7 @@ namespace WebCrawler.WebApplication
             services.AddScoped<SitemapCrawler>();
             services.AddScoped<PerformanceEvaluator>();
             services.AddScoped<PerformanceEvaluationGetter>();
+            services.AddScoped<CrawlerService>();
             services.AddControllersWithViews();
         }
 
