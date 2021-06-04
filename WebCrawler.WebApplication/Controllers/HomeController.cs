@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using WebCrawler.Logic;
+using WebCrawler.Logic.Validators;
 using WebCrawler.WebApplication.Models;
 using WebCrawler.WebApplication.Services;
 
@@ -12,11 +10,13 @@ namespace WebCrawler.WebApplication.Controllers
     {
         private readonly DbWorker _dbWorker;
         private readonly CrawlerService _crawlerService;
+        private readonly InputValidator _inputValidator;
 
-        public HomeController(DbWorker dbWorker, CrawlerService crawlerService)
+        public HomeController(DbWorker dbWorker, CrawlerService crawlerService, InputValidator inputValidator)
         {
             _dbWorker = dbWorker;
             _crawlerService = crawlerService;
+            _inputValidator = inputValidator;
         }
 
         [HttpGet]
@@ -28,7 +28,13 @@ namespace WebCrawler.WebApplication.Controllers
         [HttpPost]
         public IActionResult Index(UserInputModel input)
         {
-            
+            string errors;
+            var inputParamtersAreValid = _inputValidator.InputParameters(input.Url, out errors);
+            if (!inputParamtersAreValid)
+            {
+                ModelState.AddModelError("Url", errors);
+            }
+
             if(ModelState.IsValid)
             {
                 _crawlerService.Crawl(input.Url);

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebCrawler.EntityFramework;
 using WebCrawler.Logic;
+using WebCrawler.Logic.Validators;
 using WebCrawler.WebApplication.Services;
 
 namespace WebCrawler.WebApplication
@@ -33,6 +34,9 @@ namespace WebCrawler.WebApplication
             services.AddScoped<PerformanceEvaluator>();
             services.AddScoped<PerformanceEvaluationGetter>();
             services.AddScoped<CrawlerService>();
+            services.AddScoped<UrlValidator>();
+            services.AddScoped<RedirectionValidator>();
+            services.AddScoped<InputValidator>();
             services.AddControllersWithViews();
         }
 
