@@ -17,6 +17,14 @@
     <Compile Remove="Migrations\20210601094902_uniqueLinks.Designer.cs" />
     <Compile Remove="Migrations\20210601100618_uniqueLinks.cs" />
     <Compile Remove="Migrations\20210601100618_uniqueLinks.Designer.cs" />
+    <Compile Remove="Migrations\20210604111127_boolDefaultValue.cs" />
+    <Compile Remove="Migrations\20210604111127_boolDefaultValue.Designer.cs" />
+    <Compile Remove="Migrations\20210604111604_boolNullableValue.cs" />
+    <Compile Remove="Migrations\20210604111604_boolNullableValue.Designer.cs" />
+    <Compile Remove="Migrations\20210604111851_NullableValues.cs" />
+    <Compile Remove="Migrations\20210604111851_NullableValues.Designer.cs" />
+    <Compile Remove="Migrations\20210623080906_nullableUrl.cs" />
+    <Compile Remove="Migrations\20210623080906_nullableUrl.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,8 +9,8 @@ namespace WebCrawler.EntityFramework.EntityConfigurations
         public void Configure(EntityTypeBuilder<PerformanceResult> builder)
         {
             builder.Property(w => w.Url)
-                .HasMaxLength(1024)
-                .IsRequired(true);
+                .HasMaxLength(1024);
+                
         }
     }
 }

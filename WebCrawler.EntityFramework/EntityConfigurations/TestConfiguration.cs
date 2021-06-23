@@ -9,8 +9,7 @@ namespace WebCrawler.EntityFramework.EntityConfigurations
         public void Configure(EntityTypeBuilder<Test> builder)
         {
             builder.Property(w => w.Url)
-                .HasMaxLength(1024)
-                .IsRequired(true);
+                .HasMaxLength(1024);
             builder.Property(w => w.Date)
                 .ValueGeneratedOnAdd()
                 .HasDefaultValueSql("GETUTCDATE()");

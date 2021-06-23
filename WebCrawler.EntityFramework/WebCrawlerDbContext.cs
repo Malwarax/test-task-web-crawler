@@ -9,7 +9,7 @@ namespace WebCrawler.EntityFramework
     {
         public WebCrawlerDbContext(DbContextOptions<WebCrawlerDbContext> options) : base(options)
         {
-            Database.Migrate();
+           Database.Migrate();
         }
 
         public DbSet<PerformanceResult> PerformanceResults { get; set; }

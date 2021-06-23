@@ -8,13 +8,13 @@
         <h1 class="h2">@Model.Url</h1>
     </div>
 
-    <div class="row mt-5 table-responsive">
+    <div class="row mt-5 table-responsive d-flex">
         <h1 class="h2">PERFORMANCE</h1>
         <table id="performanceTable" class="table table-striped table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th class="col-6">Url</th>
-                    <th class="col">Timing</th>
+                    <th class="col">Url</th>
+                    <th class="flex-column">Timing</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,12 +22,14 @@
                 {
                     <tr>
                         <td>@result.Url</td>
-                        <td>@result.ResponseTime</td>
+                        <td class="text-center">@result.ResponseTime</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+
+
 
     <div class="row mt-5 table-responsive">
         <h1 class="h2">URLs NOT FOUND AT WEBSITE</h1>
