@@ -22,7 +22,7 @@ namespace WebCrawler.Logic
             _testRepository = websiteRepository;
         }
 
-        public async Task SaveResult(Uri websiteUrl, List<PerformanceResultDTO> performanceResults)
+        public async Task<int> SaveResult(Uri websiteUrl, List<PerformanceResultDto> performanceResults)
         {
             var newTest = new Test { Url = websiteUrl.AbsoluteUri };
             await _testRepository.AddAsync(newTest);
@@ -31,6 +31,8 @@ namespace WebCrawler.Logic
             _performanceResultRepository.AddRange(performanceResults.Select(p => new PerformanceResult() { Url = p.Url, ResponseTime = p.ResponseTime, InSitemap=p.InSitemap, InWebsite=p.InWebsite, TestId = newTest.Id }));
 
             await _performanceResultRepository.SaveChangesAsync();
+
+            return newTest.Id;
         }
 
         public List<Test> GetAllTests()

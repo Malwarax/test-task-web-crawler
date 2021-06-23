@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace WebCrawler.Data
+namespace WebCrawler.WebAPI.Models
 {
-    public class Test
+    public class TestDto
     {
         public int Id { get; set; }
         public string Url { get; set; }
         public DateTime? Date { get; set; }
-        public List<PerformanceResult> PerformanceResults { get; set; }
     }
 }

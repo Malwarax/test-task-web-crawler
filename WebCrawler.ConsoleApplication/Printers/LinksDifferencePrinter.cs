@@ -8,7 +8,7 @@ namespace WebCrawler.ConsoleApplication
 {
     public class LinksDifferencePrinter
     {
-        public void PrintDifference(List<PerformanceResultDTO> result)
+        public void PrintDifference(List<PerformanceResultDto> result)
         {
             Console.WriteLine($"Urls found after crawling a website: {result.Where(r=>r.InWebsite==true).Count()}");
             Console.WriteLine($"Urls found in sitemap: {result.Where(r => r.InSitemap==true).Count()}");

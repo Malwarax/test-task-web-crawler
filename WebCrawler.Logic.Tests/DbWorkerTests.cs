@@ -28,7 +28,7 @@ namespace WebCrawler.Logic.Tests
         public void SaveResult_ShouldAddTest()
         {
             //Arrange
-            var performanceResultModel = new List<PerformanceResultDTO>() { new PerformanceResultDTO() };
+            var performanceResultModel = new List<PerformanceResultDto>() { new PerformanceResultDto() };
 
             //Act
             _dbWorker.SaveResult(_url, performanceResultModel).Wait();
@@ -41,7 +41,7 @@ namespace WebCrawler.Logic.Tests
         public void SaveResult_ShouldAddPerformanceResults()
         {
             //Arrange
-            var performanceResultModel = new List<PerformanceResultDTO>() { new PerformanceResultDTO()};
+            var performanceResultModel = new List<PerformanceResultDto>() { new PerformanceResultDto()};
 
             //Act
             _dbWorker.SaveResult(_url, performanceResultModel).Wait();

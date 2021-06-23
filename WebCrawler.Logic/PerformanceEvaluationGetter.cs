@@ -15,9 +15,9 @@ namespace WebCrawler.Logic
             _performanceEvaluator = performanceEvaluator;
         }
 
-        public virtual List<PerformanceResultDTO> PrepareLinks (List<Uri> websiteUrls, List<Uri> sitemapUrls)
+        public virtual List<PerformanceResultDto> PrepareLinks (List<Uri> websiteUrls, List<Uri> sitemapUrls)
         {
-            List<PerformanceResultDTO> result = new List<PerformanceResultDTO>();
+            List<PerformanceResultDto> result = new List<PerformanceResultDto>();
 
             var combinedUrls = websiteUrls.Union(sitemapUrls).ToList();
 
@@ -36,7 +36,7 @@ namespace WebCrawler.Logic
                     inSitemap = true;
                 }
 
-                result.Add(new PerformanceResultDTO { Url = url.AbsoluteUri, ResponseTime = _performanceEvaluator.GetResponceTime(url), InSitemap=inSitemap, InWebsite=inWebsite });
+                result.Add(new PerformanceResultDto { Url = url.AbsoluteUri, ResponseTime = _performanceEvaluator.GetResponceTime(url), InSitemap=inSitemap, InWebsite=inWebsite });
             }
 
             return result

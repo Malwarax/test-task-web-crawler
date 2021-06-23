@@ -2,7 +2,7 @@
 
 namespace WebCrawler.Logic
 {
-    public class PerformanceResultDTO
+    public class PerformanceResultDto
     {
         public string Url { get; set; }
         public int ResponseTime { get; set; }

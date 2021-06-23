@@ -8,7 +8,7 @@ namespace WebCrawler.ConsoleApplication
 {
     public class ResponsePrinter
     {
-        public void PrintTable(List<PerformanceResultDTO> resultList)
+        public void PrintTable(List<PerformanceResultDto> resultList)
         {
             var table = new ConsoleTable("N", "Url", "Timing(ms)");
 
