@@ -69,5 +69,10 @@ namespace WebCrawler.Logic
             return _testRepository.GetAll().Where(t => t.Id == id).Select(t => t.Url).FirstOrDefault();
         }
 
+        public Test GetTestById(int id)
+        {
+            return _testRepository.GetAll().Where(t => t.Id == id).FirstOrDefault();
+        }
+
     }
 }

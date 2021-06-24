@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebCrawler.WebAPI.Models
 {
-    public class TimingResultDto
+    public class PerformanceResultModel
     {
         public string Url { get; set; }
         public int? ResponseTime { get; set; }

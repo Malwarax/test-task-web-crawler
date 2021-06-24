@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
-using WebCrawler.Data;
 using WebCrawler.Logic;
 
-namespace WebCrawler.Logic
+namespace WebCrawler.WebAPI.Services
 {
     public class CrawlerService
     {

@@ -8,12 +8,12 @@ namespace WebCrawler.WebAPI.Models
     public class RequestModel
     {
         /// <summary>
-        /// Get url which was found in sitemap 
+        /// Get urls which were found in sitemap 
         /// </summary>
-        public bool InSitemap { get; set; }
+        public bool sitemap { get; set; }
         /// <summary>
-        /// Get url which was found in website 
+        /// Get urls which were found in website 
         /// </summary>
-        public bool InWebsite { get; set; }
+        public bool website { get; set; }
     }
 }
