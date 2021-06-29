@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using AutoMapper;
+using System.Linq;
 using WebCrawler.Data;
 using WebCrawler.Logic;
 using WebCrawler.Services.Models.Request;
@@ -9,47 +10,45 @@ namespace WebCrawler.Services
     public class TestHelperService
     {
         private readonly DbWorker _dbWorker;
+        private readonly IMapper _mapper;
 
-        public TestHelperService(DbWorker dbWorker)
+        public TestHelperService(DbWorker dbWorker, IMapper mapper)
         {
             _dbWorker = dbWorker;
+            _mapper = mapper;
         }
 
         public ResponseModel GetTestDetails(int testId, RequestModel request)
         {
+            var test = GetTestById(testId);
             if (GetTestById(testId) == null)
             {
                 return new ResponseModel { IsSuccessful = false, Errors = "Test not found" };
             }
 
-            TestDetailsDto test = new TestDetailsDto()
-            {
-                TestId = testId,
-                Url = _dbWorker.GetUrlByTestId(testId),
-            };
-
-            var querry = _dbWorker.GetPerformanceResultsByTestId(testId);
+            var query = _dbWorker.GetPerformanceResultsByTestId(testId);
 
             if (request.InSitemap || request.InWebsite)
             {
-                querry = querry.Where(r => r.InSitemap == request.InSitemap && r.InWebsite == request.InWebsite);
+                query = query.Where(r => r.InSitemap == request.InSitemap && r.InWebsite == request.InWebsite);
             }
 
             if (request.Page != 0 && request.PageSize != 0)
             {
-                querry = querry.GetPagination(request.Page, request.PageSize);
+                query = query.GetPagination(request.Page, request.PageSize);
             }
 
-            test.Results = querry.Select(r => new PerformanceResultModel { Url = r.Url, ResponseTime = r.ResponseTime })
-                .ToArray();
+            test.PerformanceResults = query.ToList();
 
-            return new ResponseModel { Result = test };
+            TestDetailsDto testDetails = _mapper.Map<TestDetailsDto>(test);
+
+            return new ResponseModel { Result = testDetails };
         }
 
         public ResponseModel GetAllTests()
         {
             object result = _dbWorker.GetAllTests()
-                .Select(r => new TestDto { Id = r.Id, Url = r.Url, Date = r.Date });
+                .Select(r => _mapper.Map<TestDto>(r));
 
             return new ResponseModel { Result = result };
         }

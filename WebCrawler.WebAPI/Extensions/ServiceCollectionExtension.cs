@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using WebCrawler.Logic;
 using WebCrawler.Logic.Validators;
 using WebCrawler.Services;
@@ -23,6 +24,16 @@ namespace WebCrawler.WebAPI.Extensions
             services.AddScoped<InputValidator>();
             services.AddScoped<CrawlerService>();
             services.AddScoped<TestHelperService>();
+            var mapper = GetMapper();
+            services.AddSingleton(mapper);
+        }
+        private static IMapper GetMapper()
+        {
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new TestsMapperProfile());
+            });
+            return mappingConfig.CreateMapper();
         }
     }
 }
