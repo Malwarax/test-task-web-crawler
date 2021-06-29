@@ -26,7 +26,7 @@ namespace WebCrawler.WebAPI.Extensions
             services.AddScoped<RedirectionValidator>();
             services.AddScoped<InputValidator>();
             services.AddScoped<CrawlerService>();
-            services.AddScoped<TestDetailsFilteringService>();
+            services.AddScoped<TestHelperService>();
         }
     }
 }

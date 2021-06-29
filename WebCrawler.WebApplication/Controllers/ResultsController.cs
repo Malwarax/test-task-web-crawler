@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebCrawler.WebApplication.Models;
 using WebCrawler.Logic;
+using System.Linq;
 
 namespace WebApplication.Controllers
 {
@@ -16,7 +17,7 @@ namespace WebApplication.Controllers
         public IActionResult Index(int id)
         {
             var testUrl = _dbWorker.GetUrlByTestId(id);
-            var performance = _dbWorker.GetPerformanceResultsByTestId(id);
+            var performance = _dbWorker.GetPerformanceResultsByTestId(id).ToList();
             var urlsFoundOnlyInSitemap=_dbWorker.GetUrlsFoundOnlyInSitemapByTestId(id);
             var urlsFoundOnlyInWebsite = _dbWorker.GetUrlsFoundOnlyInWebsiteByTestId(id); 
 

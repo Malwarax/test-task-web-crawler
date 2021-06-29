@@ -1,4 +1,5 @@
 ﻿using System;
+using WebCrawler.Data;
 using WebCrawler.Logic;
 
 namespace WebCrawler.WebAPI.Services

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using WebCrawler.Logic.Models;
 
@@ -10,33 +11,31 @@ namespace WebCrawler.Logic
     {
         public virtual ValidationResultModel CheckRedirection(string url)
         {
+            var handler = new HttpClientHandler()
+            {
+                AllowAutoRedirect = false
+            };
+            var httpClient = new HttpClient(handler);
+            httpClient.Timeout = new TimeSpan(0, 0, 10);
 
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "HEAD";
-            request.AllowAutoRedirect = false;
             bool result = true;
             string message = "";
             try
             {
-                using (var response = request.GetResponse() as HttpWebResponse)
+                var response = httpClient.GetAsync(url).GetAwaiter().GetResult();
+                if (response.StatusCode == HttpStatusCode.Moved)
                 {
+                    message = "Error. The server is redirecting the request for this url.";
+                    result = false;
                 }
             }
-            catch (WebException ex)
+            catch
             {
-                if (ex.Message.Contains("301"))
-                {
-                    message="Error. The server is redirecting the request for this url.";
-                }
-                else
-                {
-                    message="Error. No connection could be made.";
-                }
-
+                message = "Error. No connection could be made.";
                 result = false;
             }
 
-            return new ValidationResultModel { Result=result, Message=message};
+            return new ValidationResultModel { Result = result, Message = message };
         }
     }
 }

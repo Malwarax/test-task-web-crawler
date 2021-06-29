@@ -35,44 +35,42 @@ namespace WebCrawler.Logic
             return newTest.Id;
         }
 
-        public List<Test> GetAllTests()
+        public IEnumerable<Test> GetAllTests()
         {
-            return _testRepository.GetAll().ToList();
+            return _testRepository.GetAll();
         }
 
-        public List<PerformanceResult> GetPerformanceResultsByTestId(int id)
+        public IEnumerable<PerformanceResult> GetPerformanceResultsByTestId(int id)
         {
             return _performanceResultRepository.GetAll()
                 .Where(p => p.TestId == id)
-                .OrderBy(p => p.ResponseTime)
-                .ToList();
+                .OrderBy(p => p.ResponseTime);
         }
 
-        public List<string> GetUrlsFoundOnlyInSitemapByTestId(int id)
+        public IEnumerable<string> GetUrlsFoundOnlyInSitemapByTestId(int id)
         {
             return _performanceResultRepository.GetAll()
                 .Where(p => p.TestId == id && p.InSitemap == true && p.InWebsite == false)
-                .Select(p => p.Url)
-                .ToList();
+                .Select(p => p.Url);
         }
 
-        public List<string> GetUrlsFoundOnlyInWebsiteByTestId(int id)
+        public IEnumerable<string> GetUrlsFoundOnlyInWebsiteByTestId(int id)
         {
             return _performanceResultRepository.GetAll()
                 .Where(p => p.TestId == id && p.InSitemap == false && p.InWebsite == true)
-                .Select(p => p.Url)
-                .ToList();
+                .Select(p => p.Url);
         }
 
         public string GetUrlByTestId(int id)
         {
-            return _testRepository.GetAll().Where(t => t.Id == id).Select(t => t.Url).FirstOrDefault();
+            return _testRepository.GetByIdAsync(id).Result.Url;
         }
 
         public Test GetTestById(int id)
         {
-            return _testRepository.GetAll().Where(t => t.Id == id).FirstOrDefault();
+            return _testRepository.GetAll()
+                .Where(t => t.Id == id)
+                .FirstOrDefault();
         }
-
     }
 }
