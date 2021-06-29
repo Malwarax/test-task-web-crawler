@@ -1,14 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebCrawler.Logic;
 using WebCrawler.Logic.Validators;
+using WebCrawler.Services;
 
-namespace WebCrawler.WebApplication.Extensions
+namespace WebCrawler.WebAPI.Extensions
 {
-    public static class IServiceCollectionExtension
+    public static class ServiceCollectionExtension
     {
         public static void AddWebCrawlerLogicServices(this IServiceCollection services)
         {
@@ -24,6 +21,8 @@ namespace WebCrawler.WebApplication.Extensions
             services.AddScoped<UrlValidator>();
             services.AddScoped<RedirectionValidator>();
             services.AddScoped<InputValidator>();
+            services.AddScoped<CrawlerService>();
+            services.AddScoped<TestHelperService>();
         }
     }
 }

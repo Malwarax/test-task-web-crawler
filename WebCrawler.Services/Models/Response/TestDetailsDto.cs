@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace WebCrawler.WebAPI.Models
+namespace WebCrawler.Services.Models.Response
 {
     public class TestDetailsDto
     {

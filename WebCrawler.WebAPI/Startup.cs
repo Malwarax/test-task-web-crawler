@@ -10,7 +10,6 @@ using System.IO;
 using System.Reflection;
 using WebCrawler.EntityFramework;
 using WebCrawler.WebAPI.Extensions;
-using WebCrawler.WebAPI.Services;
 
 namespace WebCrawler.WebAPI
 {
@@ -57,7 +56,7 @@ namespace WebCrawler.WebAPI
             app.UseRouting();
 
             //app.UseAuthorization();
-            
+
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseEndpoints(endpoints =>

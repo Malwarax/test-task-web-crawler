@@ -5,11 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebCrawler.Logic;
 using WebCrawler.Logic.Validators;
-using WebCrawler.WebAPI.Services;
 
-namespace WebCrawler.WebAPI.Extensions
+namespace WebCrawler.WebApplication.Extensions
 {
-    public static class IServiceCollectionExtension
+    public static class ServiceCollectionExtension
     {
         public static void AddWebCrawlerLogicServices(this IServiceCollection services)
         {
@@ -25,8 +24,6 @@ namespace WebCrawler.WebAPI.Extensions
             services.AddScoped<UrlValidator>();
             services.AddScoped<RedirectionValidator>();
             services.AddScoped<InputValidator>();
-            services.AddScoped<CrawlerService>();
-            services.AddScoped<TestHelperService>();
         }
     }
 }

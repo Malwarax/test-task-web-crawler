@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using WebCrawler.Data;
-using WebCrawler.Logic;
-using WebCrawler.Logic.Validators;
-using WebCrawler.WebAPI.Models;
-using WebCrawler.WebAPI.Services;
+using WebCrawler.Services;
+using WebCrawler.Services.Models.Request;
+using WebCrawler.Services.Models.Response;
 
 namespace WebCrawler.WebAPI.Controllers
 {
@@ -14,16 +10,13 @@ namespace WebCrawler.WebAPI.Controllers
     [ApiController]
     public class TestsController : ControllerBase
     {
-        private readonly DbWorker _dbWorker;
         private readonly CrawlerService _crawlerService;
-        private readonly InputValidator _inputValidator;
+
         private readonly TestHelperService _testHelperService;
 
-        public TestsController(DbWorker dbWorker, CrawlerService crawlerService, InputValidator inputValidator, TestHelperService testHelperService)
+        public TestsController(CrawlerService crawlerService, TestHelperService testHelperService)
         {
-            _dbWorker = dbWorker;
             _crawlerService = crawlerService;
-            _inputValidator = inputValidator;
             _testHelperService = testHelperService;
         }
 
@@ -31,16 +24,16 @@ namespace WebCrawler.WebAPI.Controllers
         /// Returns all tests
         /// </summary>
         [HttpGet]
-        public ActionResult<IEnumerable<TestDto>> GetAllTests()
+        public ActionResult<ResponseModel> GetAllTests()
         {
-            return _testHelperService.GetAllTests().ToArray();
+            return _testHelperService.GetAllTests();
         }
 
         /// <summary>
         /// Returns single test details by test id
         /// </summary>
         /// <remarks>
-        /// If category is unset then returns performance result for all test urls
+        /// If sitemap and website are unset then returns performance result for all test urls
         /// 
         /// In second case returns performance result only for selected category
         /// 
@@ -50,13 +43,8 @@ namespace WebCrawler.WebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<TestDetailsDto> GetTestById(int id, [FromQuery] RequestModel request)
+        public ActionResult<ResponseModel> GetTestById(int id, [FromQuery] RequestModel request)
         {
-            if (_dbWorker.GetTestById(id) == null)
-            {
-                return NotFound(id);
-            }
-
             return _testHelperService.GetTestDetails(id, request);
         }
         /// <summary>
@@ -66,33 +54,26 @@ namespace WebCrawler.WebAPI.Controllers
         [HttpGet("{id}/count")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<int> GetTestResultsCountById(int id)
+        public ActionResult<ResponseModel> GetTestResultsCountById(int id)
         {
-            if (_dbWorker.GetTestById(id) == null)
-            {
-                return NotFound(id);
-            }
-
-            return _dbWorker.GetPerformanceResultsByTestId(id).Count();
+            return _testHelperService.GetTestResultsCountByTestId(id);
         }
 
         /// <summary>
         /// Create new test
         /// </summary>
         /// <param name="input"></param>
-        /// <returns>A newly created test</returns>
-        /// <response code="200">Returns the newly created test</response>
+        /// <returns>A newly created test id</returns>
+        /// <response code="200">Returns the newly created test id</response>
         /// <response code="400">If the url is invalid</response>            
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<int> PostTest([FromBody] UserInputModel input)
+        public ActionResult<ResponseModel> PostTest([FromBody] UserInputModel input)
         {
-            string errors;
-            var inputParametersAreValid = _inputValidator.InputParameters(input.Url, out errors);
-            if (!inputParametersAreValid)
+            if (input == null)
             {
-                return BadRequest(errors);
+                return BadRequest();
             }
 
             return _crawlerService.Crawl(input.Url);
