@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using System.Collections.Generic;
 using System.Linq;
 using WebCrawler.Data;
 using WebCrawler.Logic;
@@ -21,11 +22,20 @@ namespace WebCrawler.Services
         public ResponseModel GetTestDetails(int testId, RequestModel request)
         {
             var test = GetTestById(testId);
+            
             if (GetTestById(testId) == null)
             {
                 return new ResponseModel { IsSuccessful = false, Errors = "Test not found" };
             }
 
+            test.PerformanceResults = FilterTestDetails(testId, request);
+            TestDetailsDto testDetails = _mapper.Map<TestDetailsDto>(test);
+
+            return new ResponseModel { Result = testDetails };
+        }
+
+        private List<PerformanceResult>FilterTestDetails(int testId, RequestModel request)
+        {
             var query = _dbWorker.GetPerformanceResultsByTestId(testId);
 
             if (request.InSitemap || request.InWebsite)
@@ -38,11 +48,7 @@ namespace WebCrawler.Services
                 query = query.GetPagination(request.Page, request.PageSize);
             }
 
-            test.PerformanceResults = query.ToList();
-
-            TestDetailsDto testDetails = _mapper.Map<TestDetailsDto>(test);
-
-            return new ResponseModel { Result = testDetails };
+            return query.ToList();
         }
 
         public ResponseModel GetAllTests()
