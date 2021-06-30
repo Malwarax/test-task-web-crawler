@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebCrawler.Services;
 using WebCrawler.Services.Models.Request;
 using WebCrawler.Services.Models.Response;
@@ -10,13 +11,11 @@ namespace WebCrawler.WebAPI.Controllers
     [ApiController]
     public class TestsController : ControllerBase
     {
-        private readonly CrawlerService _crawlerService;
-
         private readonly TestHelperService _testHelperService;
 
-        public TestsController(CrawlerService crawlerService, TestHelperService testHelperService)
+        public TestsController( TestHelperService testHelperService)
         {
-            _crawlerService = crawlerService;
+
             _testHelperService = testHelperService;
         }
 
@@ -26,7 +25,7 @@ namespace WebCrawler.WebAPI.Controllers
         [HttpGet]
         public ActionResult<ResponseModel> GetAllTests()
         {
-            return _testHelperService.GetAllTests();
+            return new ResponseModel { Result = _testHelperService.GetAllTests() };
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace WebCrawler.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<ResponseModel> GetTestById(int id, [FromQuery] RequestModel request)
         {
-            return _testHelperService.GetTestDetails(id, request);
+            return new ResponseModel {Result = _testHelperService.GetTestDetails(id, request) };
         }
         /// <summary>
         /// Returns test results count by test id
@@ -56,7 +55,7 @@ namespace WebCrawler.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<ResponseModel> GetTestResultsCountById(int id)
         {
-            return _testHelperService.GetTestResultsCountByTestId(id);
+            return new ResponseModel { Result = _testHelperService.GetTestResultsCountByTestId(id) };
         }
 
         /// <summary>
@@ -69,14 +68,14 @@ namespace WebCrawler.WebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<ResponseModel> PostTest([FromBody] UserInputModel input)
+        public async Task<ActionResult<ResponseModel>> PostTest([FromBody] UserInputModel input)
         {
             if (input == null)
             {
                 return BadRequest();
             }
 
-            return _crawlerService.Crawl(input.Url);
+            return new ResponseModel { Result = await _testHelperService.CreateNewTest(input) };
         }
     }
 }

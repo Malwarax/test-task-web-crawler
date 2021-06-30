@@ -35,7 +35,7 @@ namespace WebCrawler.Logic
             return newTest.Id;
         }
 
-        public IEnumerable<Test> GetAllTests()
+        public IQueryable<Test> GetAllTests()
         {
             return _testRepository.GetAll();
         }
@@ -66,7 +66,7 @@ namespace WebCrawler.Logic
             return _testRepository.GetByIdAsync(id).Result.Url;
         }
 
-        public Test GetTestById(int id)
+        public virtual Test GetTestById(int id)
         {
             return _testRepository.GetAll()
                 .Where(t => t.Id == id)

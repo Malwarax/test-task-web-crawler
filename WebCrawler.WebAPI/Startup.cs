@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +9,10 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json;
 using WebCrawler.EntityFramework;
 using WebCrawler.WebAPI.Extensions;
+using WebCrawler.WebAPI.Middleware;
 
 namespace WebCrawler.WebAPI
 {
@@ -25,7 +28,6 @@ namespace WebCrawler.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -39,6 +41,7 @@ namespace WebCrawler.WebAPI
             services.AddEfRepository<WebCrawlerDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("WebCrawlerDB")));
             services.AddWebCrawlerLogicServices();
             services.AddCors();
+            services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +53,8 @@ namespace WebCrawler.WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebCrawler.WebAPI v1"));
             }
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

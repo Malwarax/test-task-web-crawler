@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using WebCrawler.Logic;
 using WebCrawler.Logic.Validators;
 using WebCrawler.Services;
+using WebCrawler.Services.Interfaces;
+using WebCrawler.Services.Mappers;
 
 namespace WebCrawler.WebAPI.Extensions
 {
@@ -22,8 +24,11 @@ namespace WebCrawler.WebAPI.Extensions
             services.AddScoped<UrlValidator>();
             services.AddScoped<RedirectionValidator>();
             services.AddScoped<InputValidator>();
-            services.AddScoped<CrawlerService>();
+            //services.AddScoped<CrawlerService>();
             services.AddScoped<TestHelperService>();
+            services.AddScoped<ICrawlerService, CrawlerService>();
+
+
             var mapper = GetMapper();
             services.AddSingleton(mapper);
         }

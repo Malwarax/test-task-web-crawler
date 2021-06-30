@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace WebCrawler.Services
+namespace WebCrawler.Services.Extensions
 {
     static class PaginationExtension
     {

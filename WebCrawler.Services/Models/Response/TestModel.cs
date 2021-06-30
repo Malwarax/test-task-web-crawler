@@ -2,7 +2,7 @@
 
 namespace WebCrawler.Services.Models.Response
 {
-    public class TestDto
+    public class TestModel
     {
         public int Id { get; set; }
         public string Url { get; set; }

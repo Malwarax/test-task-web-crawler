@@ -1,8 +1,13 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebCrawler.Data;
 using WebCrawler.Logic;
+using WebCrawler.Logic.Validators;
+using WebCrawler.Services.Exceptions;
+using WebCrawler.Services.Extensions;
+using WebCrawler.Services.Interfaces;
 using WebCrawler.Services.Models.Request;
 using WebCrawler.Services.Models.Response;
 
@@ -12,29 +17,32 @@ namespace WebCrawler.Services
     {
         private readonly DbWorker _dbWorker;
         private readonly IMapper _mapper;
+        private readonly ICrawlerService _crawlerService;
+        private readonly InputValidator _inputValidator;
 
-        public TestHelperService(DbWorker dbWorker, IMapper mapper)
+        public TestHelperService(DbWorker dbWorker, IMapper mapper, ICrawlerService crawlerService, InputValidator inputValidator)
         {
             _dbWorker = dbWorker;
             _mapper = mapper;
+            _crawlerService = crawlerService;
+            _inputValidator = inputValidator;
         }
 
-        public ResponseModel GetTestDetails(int testId, RequestModel request)
+        public TestDetailsModel GetTestDetails(int testId, RequestModel request)
         {
-            var test = GetTestById(testId);
-            
-            if (GetTestById(testId) == null)
+            var test = _dbWorker.GetTestById(testId);
+
+            if (test == null)
             {
-                return new ResponseModel { IsSuccessful = false, Errors = "Test not found" };
+                throw new TestNotFoundException();
             }
 
             test.PerformanceResults = FilterTestDetails(testId, request);
-            TestDetailsDto testDetails = _mapper.Map<TestDetailsDto>(test);
 
-            return new ResponseModel { Result = testDetails };
+            return _mapper.Map<TestDetailsModel>(test);
         }
 
-        private List<PerformanceResult>FilterTestDetails(int testId, RequestModel request)
+        private List<PerformanceResult> FilterTestDetails(int testId, RequestModel request)
         {
             var query = _dbWorker.GetPerformanceResultsByTestId(testId);
 
@@ -51,30 +59,33 @@ namespace WebCrawler.Services
             return query.ToList();
         }
 
-        public ResponseModel GetAllTests()
+        public List<TestModel> GetAllTests()
         {
-            object result = _dbWorker.GetAllTests()
-                .Select(r => _mapper.Map<TestDto>(r));
-
-            return new ResponseModel { Result = result };
+            return _dbWorker.GetAllTests()
+                .Select(r => _mapper.Map<TestModel>(r))
+                .ToList(); ;
         }
 
-        public Test GetTestById(int id)
+        public int GetTestResultsCountByTestId(int testId)
         {
-            return _dbWorker.GetTestById(id);
-        }
-
-        public ResponseModel GetTestResultsCountByTestId(int testId)
-        {
-            if (GetTestById(testId) == null)
+            if (_dbWorker.GetTestById(testId) == null)
             {
-                return new ResponseModel { IsSuccessful = false, Errors = "Test not found" };
+                throw new TestNotFoundException();
             }
 
-            return new ResponseModel
+            return _dbWorker.GetPerformanceResultsByTestId(testId).Count();
+        }
+
+        public async Task<int> CreateNewTest(UserInputModel input)
+        {
+            string errors;
+            var inputParametersAreValid = _inputValidator.InputParameters(input.Url, out errors);
+            if (!inputParametersAreValid)
             {
-                Result = _dbWorker.GetPerformanceResultsByTestId(testId).Count()
-            };
+                throw new UrlValidationException(errors);
+            }
+
+            return await _crawlerService.Crawl(input.Url);
         }
     }
 }

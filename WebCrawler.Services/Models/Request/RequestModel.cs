@@ -1,4 +1,6 @@
-﻿namespace WebCrawler.Services.Models.Request
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace WebCrawler.Services.Models.Request
 {
     public class RequestModel
     {
