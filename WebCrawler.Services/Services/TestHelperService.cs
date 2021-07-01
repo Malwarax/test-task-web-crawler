@@ -42,7 +42,7 @@ namespace WebCrawler.Services
             return _mapper.Map<TestDetailsModel>(test);
         }
 
-        private List<PerformanceResult> FilterTestDetails(int testId, RequestModel request)
+        public List<PerformanceResult> FilterTestDetails(int testId, RequestModel request)
         {
             var query = _dbWorker.GetPerformanceResultsByTestId(testId);
 

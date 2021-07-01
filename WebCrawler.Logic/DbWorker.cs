@@ -40,7 +40,7 @@ namespace WebCrawler.Logic
             return _testRepository.GetAll();
         }
 
-        public IQueryable<PerformanceResult> GetPerformanceResultsByTestId(int id)
+        public virtual IQueryable<PerformanceResult> GetPerformanceResultsByTestId(int id)
         {
             return _performanceResultRepository.GetAll()
                 .Where(p => p.TestId == id)

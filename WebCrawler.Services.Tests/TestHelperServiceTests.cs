@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Moq;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using WebCrawler.Data;
 using WebCrawler.Logic;
 using WebCrawler.Logic.Validators;
@@ -43,16 +45,6 @@ namespace WebCrawler.Services.Tests
             Assert.Equal(outString, exception.Message);
         }
 
-        //[Fact]
-        //public void CreateNewTest_WithCorrectUrl_ShouldReturnNewTestId()
-        //{
-        //    //Arrange
-
-        //    //Act
-
-        //    //Assert
-        //}
-
         [Fact]
         public void GetTestResultsCountByTestId_WithInvalidId_ShouldThrowException()
         {
@@ -67,44 +59,33 @@ namespace WebCrawler.Services.Tests
             Assert.Equal("Test not found", exception.Message);
         }
 
-        //[Fact]
-        //public void GetTestResultsCountByTestId_WithCorrectId_ShouldReturnResultsCount()
-        //{
-        //    //Arrange
+        [Fact]
+        public void GetTestDetails_WithInvalidId_ShouldThrowException()
+        {
+            //Arrange
+            Test test = null;
+            _dbWorkerMock.Setup(d => d.GetTestById(It.IsAny<int>())).Returns(test);
 
-        //    //Act
+            //Act
+            var exception = Assert.Throws<TestNotFoundException>(() => _testHelperService.GetTestDetails(0, new RequestModel()));
 
-        //    //Assert
-        //}
+            //Assert
+            Assert.Equal("Test not found", exception.Message);
+        }
 
-        //[Fact]
-        //public void GetTestDetails_WithInvalidId_ShouldThrowException()
-        //{
-        //    //Arrange
+        [Fact]
+        public void FilterTestDetails_ShouldSupportCategoryFilter()
+        {
+            //Arrange
+            var query = new List<PerformanceResult> { new PerformanceResult { InWebsite = true, InSitemap = false }, new PerformanceResult { InWebsite = false, InSitemap = true } }.AsQueryable();
+            _dbWorkerMock.Setup(d => d.GetPerformanceResultsByTestId(It.IsAny<int>())).Returns(query);
 
-        //    //Act
+            //Act
+            var results = _testHelperService.FilterTestDetails(1, new RequestModel { InSitemap = true });
 
-        //    //Assert
-        //}
-
-        //[Fact]
-        //public void GetTestDetails_ShouldSupportCategoryFilter()
-        //{
-        //    //Arrange
-
-        //    //Act
-
-        //    //Assert
-        //}
-
-        //[Fact]
-        //public void GetTestDetails_ShouldSupportPaginationFilter()
-        //{
-        //    //Arrange
-
-        //    //Act
-
-        //    //Assert
-        //}
+            //Assert
+            Assert.Single(results);
+            Assert.True(results[0].InSitemap);
+        }
     }
 }
