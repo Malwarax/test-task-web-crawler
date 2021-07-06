@@ -13,22 +13,22 @@ using Xunit;
 
 namespace WebCrawler.Services.Tests
 {
-    public class TestHelperServiceTests
+    public class TestsServiceTests
     {
 
         private readonly Mock<DbWorker> _dbWorkerMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ICrawlerService> _crawlerServiceMock;
         private readonly Mock<InputValidator> _inputValidatorMock;
-        private readonly TestHelperService _testHelperService;
+        private readonly TestsService _testHelperService;
 
-        public TestHelperServiceTests()
+        public TestsServiceTests()
         {
             _dbWorkerMock = new Mock<DbWorker>(new Mock<IRepository<PerformanceResult>>().Object, new Mock<IRepository<Test>>().Object);
             _mapperMock = new Mock<IMapper>();
             _crawlerServiceMock = new Mock<ICrawlerService>();
             _inputValidatorMock = new Mock<InputValidator>(new Mock<UrlValidator>().Object, new Mock<RedirectionValidator>().Object);
-            _testHelperService = new TestHelperService(_dbWorkerMock.Object, _mapperMock.Object, _crawlerServiceMock.Object, _inputValidatorMock.Object);
+            _testHelperService = new TestsService(_dbWorkerMock.Object, _mapperMock.Object, _crawlerServiceMock.Object, _inputValidatorMock.Object);
         }
 
         [Fact]

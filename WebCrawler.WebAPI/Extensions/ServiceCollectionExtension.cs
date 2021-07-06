@@ -24,13 +24,9 @@ namespace WebCrawler.WebAPI.Extensions
             services.AddScoped<UrlValidator>();
             services.AddScoped<RedirectionValidator>();
             services.AddScoped<InputValidator>();
-            //services.AddScoped<CrawlerService>();
-            services.AddScoped<TestHelperService>();
+            services.AddScoped<TestsService>();
             services.AddScoped<ICrawlerService, CrawlerService>();
-
-
-            var mapper = GetMapper();
-            services.AddSingleton(mapper);
+            services.AddSingleton(GetMapper());
         }
         private static IMapper GetMapper()
         {

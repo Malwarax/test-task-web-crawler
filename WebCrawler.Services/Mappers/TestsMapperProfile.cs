@@ -10,7 +10,8 @@ namespace WebCrawler.Services.Mappers
         {
             CreateMap<Test, TestModel>();
             CreateMap<PerformanceResult, PerformanceResultModel>();
-            CreateMap<Test, TestDetailsModel>().ForMember(dest=>dest.Results, opt=>opt.MapFrom(src=>src.PerformanceResults));
+            CreateMap<Test, TestDetailsModel>()
+                .ForMember(dest=>dest.Results, opt=>opt.MapFrom(src=>src.PerformanceResults));
         }
     }
 }

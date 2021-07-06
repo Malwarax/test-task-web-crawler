@@ -26,6 +26,7 @@ namespace WebCrawler.WebAPI.Middleware
                 var response = context.Response;
                 response.ContentType = "application/json";
                 var result = JsonSerializer.Serialize(new ResponseModel { IsSuccessful = false, Errors = error.Message },new JsonSerializerOptions { PropertyNamingPolicy=JsonNamingPolicy.CamelCase});
+
                 await response.WriteAsync(result);
             }
         }

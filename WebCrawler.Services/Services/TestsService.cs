@@ -13,14 +13,14 @@ using WebCrawler.Services.Models.Response;
 
 namespace WebCrawler.Services
 {
-    public class TestHelperService
+    public class TestsService
     {
         private readonly DbWorker _dbWorker;
         private readonly IMapper _mapper;
         private readonly ICrawlerService _crawlerService;
         private readonly InputValidator _inputValidator;
 
-        public TestHelperService(DbWorker dbWorker, IMapper mapper, ICrawlerService crawlerService, InputValidator inputValidator)
+        public TestsService(DbWorker dbWorker, IMapper mapper, ICrawlerService crawlerService, InputValidator inputValidator)
         {
             _dbWorker = dbWorker;
             _mapper = mapper;
@@ -46,15 +46,8 @@ namespace WebCrawler.Services
         {
             var query = _dbWorker.GetPerformanceResultsByTestId(testId);
 
-            if (request.InSitemap || request.InWebsite)
-            {
-                query = query.Where(r => r.InSitemap == request.InSitemap && r.InWebsite == request.InWebsite);
-            }
-
-            if (request.Page != 0 && request.PageSize != 0)
-            {
-                query = query.GetPagination(request.Page, request.PageSize);
-            }
+            query = query.Where(r => r.InSitemap == request.InSitemap && r.InWebsite == request.InWebsite);
+            query = query.GetPagination(request.Page, request.PageSize);
 
             return query.ToList();
         }

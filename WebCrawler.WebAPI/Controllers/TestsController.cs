@@ -11,9 +11,9 @@ namespace WebCrawler.WebAPI.Controllers
     [ApiController]
     public class TestsController : ControllerBase
     {
-        private readonly TestHelperService _testHelperService;
+        private readonly TestsService _testHelperService;
 
-        public TestsController( TestHelperService testHelperService)
+        public TestsController( TestsService testHelperService)
         {
 
             _testHelperService = testHelperService;
